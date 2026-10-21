@@ -39,6 +39,7 @@
     <nav class="site-nav" id="site-nav" aria-label="Main navigation">
       <a href="#story">Our story</a>
       <a href="#offerings">The good stuff</a>
+      <a href="#beauty-skills">Beauty skills</a>
       <a class="nav-cta" href="#contact">Say hello <span aria-hidden="true">↗</span></a>
     </nav>
   </header>
@@ -50,7 +51,7 @@
         <h1 id="hero-heading">A little more <em>glow.</em><br>A little more <em>you.</em></h1>
         <p class="hero-description">Thoughtful skin and body rituals, beautiful dressing, and little details that help you feel elegant and entirely yourself.</p>
         <div class="hero-actions">
-          <a class="button button-light" href="#offerings">Find your feel <span aria-hidden="true">↘</span></a>
+          <a class="button button-light" href="#beauty-skills">Explore beauty skills <span aria-hidden="true">↘</span></a>
           <a class="text-link hero-text-link" href="#story">Meet Beauthy Swells <span aria-hidden="true">→</span></a>
         </div>
         <div class="hero-aside"><span class="hand-drawn-star" aria-hidden="true">✳</span> Your pace. Your place. Your kind of glow.</div>
@@ -111,6 +112,47 @@
           </article>
         </div>
         <p class="offerings-note"><span aria-hidden="true">✳</span> Start with a small skin ritual, a body-care moment, or a thoughtful outfit. The details are yours—find what makes you feel lovely.</p>
+      </div>
+    </section>
+
+    <section class="beauty-studio" id="beauty-skills" aria-labelledby="beauty-skills-heading">
+      <div class="beauty-studio__inner">
+        <div class="beauty-studio__intro">
+          <div>
+            <p class="eyebrow eyebrow-berry"><span aria-hidden="true">✦</span> THE BEAUTY SKILL STUDIO</p>
+            <h2 id="beauty-skills-heading">Little skills.<br><em>A lovely difference.</em></h2>
+          </div>
+          <p>Try one small technique for skin, body, or elegant dressing. Keep the ones that feel like you.</p>
+        </div>
+        <div class="beauty-studio__workspace">
+          <aside class="beauty-studio__rail" aria-label="Choose a beauty focus">
+            <p class="beauty-studio__rail-label">PICK YOUR FOCUS</p>
+            <div class="beauty-tabs" role="tablist" aria-label="Beauty skill categories">
+              <button class="beauty-tab" id="beauty-tab-skin" type="button" role="tab" aria-label="Skin beauty skills" aria-selected="true" aria-controls="beauty-guide-panel" tabindex="0" data-beauty-focus="skin"><span>01</span>Skin</button>
+              <button class="beauty-tab" id="beauty-tab-body" type="button" role="tab" aria-label="Body beauty skills" aria-selected="false" aria-controls="beauty-guide-panel" tabindex="-1" data-beauty-focus="body"><span>02</span>Body</button>
+              <button class="beauty-tab" id="beauty-tab-style" type="button" role="tab" aria-label="Elegant dressing skills" aria-selected="false" aria-controls="beauty-guide-panel" tabindex="-1" data-beauty-focus="style"><span>03</span>Style</button>
+            </div>
+            <p class="beauty-studio__aside-note">A tiny practice is enough. Explore at your own pace.</p>
+          </aside>
+          <div class="beauty-guide" id="beauty-guide-panel" role="tabpanel" aria-labelledby="beauty-tab-skin" tabindex="0">
+            <div class="beauty-guide__heading">
+              <span class="beauty-guide__category" id="beauty-guide-category">01 / SKIN BEAUTY</span>
+              <h3 id="beauty-guide-title">Skin beauty, made simple.</h3>
+              <p id="beauty-guide-description">A few thoughtful makeup techniques for a fresh, comfortable finish—adapt each one to your own routine.</p>
+            </div>
+            <ol class="beauty-steps" id="beauty-guide-steps">
+              <li class="beauty-step"><span class="beauty-step__number">01</span><div class="beauty-step__copy"><h4>Prep, then pause</h4><p>Apply the moisturizer you enjoy and let it settle before makeup, so your base glides on smoothly.</p></div><button class="beauty-step__toggle" type="button" aria-pressed="false"><span>Try it</span><span aria-hidden="true">＋</span></button></li>
+              <li class="beauty-step"><span class="beauty-step__number">02</span><div class="beauty-step__copy"><h4>Start at the center</h4><p>Use a small amount of base and blend outward in light layers, adding only where you want coverage.</p></div><button class="beauty-step__toggle" type="button" aria-pressed="false"><span>Try it</span><span aria-hidden="true">＋</span></button></li>
+              <li class="beauty-step"><span class="beauty-step__number">03</span><div class="beauty-step__copy"><h4>Soften the edges</h4><p>Tap concealer only where you want it, then blend the edges with a clean finger or tool.</p></div><button class="beauty-step__toggle" type="button" aria-pressed="false"><span>Try it</span><span aria-hidden="true">＋</span></button></li>
+            </ol>
+            <div class="beauty-guide__progress-row">
+              <p class="beauty-guide__progress-copy" id="beauty-guide-progress-copy" role="status" aria-live="polite">0 of 3 skills tried</p>
+              <button class="beauty-guide__reset" id="beauty-guide-reset" type="button" disabled>Start fresh</button>
+            </div>
+            <div class="beauty-progress" id="beauty-guide-progress" role="progressbar" aria-label="Skin beauty guide progress" aria-valuemin="0" aria-valuemax="3" aria-valuenow="0" aria-valuetext="0 of 3 skills tried"><span class="beauty-progress__fill" id="beauty-guide-progress-fill"></span></div>
+            <p class="beauty-guide__note">Beauty is personal; treat these ideas as inspiration, not rules. Your checkmarks last for this visit.</p>
+          </div>
+        </div>
       </div>
     </section>
 
