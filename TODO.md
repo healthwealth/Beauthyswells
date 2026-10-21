@@ -6,7 +6,7 @@
 
 ## About and offerings — complete
 - An about section presents the Beauthy Swells story and brand identity.
-- An offerings section highlights the brand’s core products or services using adaptable, high-level self-care themes because no specific catalog was supplied.
+- The about and offerings sections frame Beauthy Swells around skin beauty, body beauty, and elegant personal style. Until a specific catalog or service list is supplied, use editorial, adaptable language and do not invent products, treatments, prices, or availability.
 
 ## Contact — needs business details
 - The contact section includes a simple inquiry form and essential contact details.
