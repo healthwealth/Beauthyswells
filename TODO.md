@@ -13,6 +13,10 @@
 - Let visitors switch tracks, mark steps complete, and see progress update. Make the interaction keyboard- and touch-friendly, accessible to assistive technology, and responsive on mobile.
 - Surface the guide from the primary homepage call to action and main navigation. Extend the existing Electric Bloom design while preserving the brand, existing route anchors, and inquiry form behavior.
 
+## Beauty-guide Preview polish — complete
+- Ensure the stylesheet and interaction script load correctly in embedded Preview by using relative URLs for project-local assets.
+- Make the Skin, Body, and Style controls and step actions visibly clickable with higher contrast, larger touch targets, and clear selected, hover, and keyboard-focus states while keeping the existing brand palette.
+
 ## Contact — needs business details
 - The contact section includes a simple inquiry form and essential contact details.
 - The form validates the inquiry and opens a pre-filled email draft; the recipient is left blank because the business inbox was not provided. Add the preferred inquiry email to enable direct routing to Beauthy Swells.

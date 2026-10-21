@@ -130,16 +130,17 @@ button, a { -webkit-tap-highlight-color: transparent; }
 .beauty-studio__intro h2 { margin: 0; color: var(--ink); font-family: var(--serif); font-size: clamp(3rem, 6.1vw, 5.7rem); font-weight: 500; letter-spacing: -.06em; line-height: 1.02; }
 .beauty-studio__intro h2 em { color: var(--berry); font-weight: 400; }
 .beauty-studio__intro > p { max-width: 390px; margin: 0 0 .35rem; color: var(--ink-soft); font-size: .88rem; line-height: 1.8; }
-.beauty-studio__workspace { display: grid; grid-template-columns: minmax(220px, .58fr) minmax(0, 1.42fr); border: 1px solid #e6ccd3; background: white; }
-.beauty-studio__rail { padding: clamp(1.4rem, 3vw, 2.5rem); background: var(--pink-light); }
-.beauty-studio__rail-label { margin: 0; color: var(--berry); font-size: .59rem; font-weight: 700; letter-spacing: .17em; }
-.beauty-tabs { display: grid; gap: .55rem; margin-top: 1rem; }
-.beauty-tab { display: flex; min-height: 50px; align-items: center; justify-content: space-between; gap: .8rem; border: 1px solid #e5ccd3; padding: .7rem .9rem; color: var(--ink); background: white; text-align: left; font-size: .76rem; font-weight: 700; cursor: pointer; transition: border-color .2s ease, background .2s ease, color .2s ease; }
-.beauty-tab:hover { border-color: var(--berry); }
-.beauty-tab > span { color: var(--berry); font-size: .55rem; letter-spacing: .12em; }
-.beauty-tab[aria-selected="true"] { border-color: var(--berry); color: white; background: var(--berry); }
+.beauty-studio__workspace { display: flex; flex-direction: column; overflow: hidden; border: 1px solid #e6ccd3; background: white; box-shadow: 0 12px 30px rgba(89,18,52,.06); }
+.beauty-studio__rail { display: grid; grid-template-columns: max-content minmax(0, 1fr) minmax(170px, .5fr); align-items: center; gap: 1rem 1.5rem; border-bottom: 1px solid #e6ccd3; padding: 1rem clamp(1.1rem, 3vw, 2rem); background: var(--pink-light); }
+.beauty-studio__rail-label { margin: 0; color: var(--berry); font-size: .66rem; font-weight: 700; letter-spacing: .14em; }
+.beauty-tabs { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .65rem; margin: 0; }
+.beauty-tab { display: flex; min-height: 68px; flex-direction: column; align-items: center; justify-content: center; gap: .15rem; border: 1px solid #c77a95; border-radius: 3px; padding: .6rem .8rem; color: var(--berry); background: white; text-align: center; font-size: .88rem; line-height: 1.25; font-weight: 700; cursor: pointer; box-shadow: 0 3px 0 rgba(142,23,79,.08); transition: transform .2s ease, border-color .2s ease, background .2s ease, color .2s ease, box-shadow .2s ease; }
+.beauty-tab:hover { transform: translateY(-2px); border-color: var(--berry); background: #fffafb; box-shadow: 0 6px 14px rgba(89,18,52,.12); }
+.beauty-tab:active { transform: translateY(0); }
+.beauty-tab > span { color: var(--berry); font-size: .6rem; font-weight: 700; letter-spacing: .14em; }
+.beauty-tab[aria-selected="true"] { border: 2px solid var(--berry-deep); color: white; background: var(--berry); box-shadow: 0 4px 0 rgba(89,18,52,.18); }
 .beauty-tab[aria-selected="true"] > span { color: var(--pink); }
-.beauty-studio__aside-note { max-width: 250px; margin: 1.4rem 0 0; color: var(--ink-soft); font-family: var(--serif); font-size: .95rem; font-style: italic; line-height: 1.55; }
+.beauty-studio__aside-note { max-width: 240px; margin: 0; color: var(--ink-soft); font-family: var(--serif); font-size: .84rem; font-style: italic; line-height: 1.55; }
 .beauty-guide { min-width: 0; padding: clamp(1.5rem, 4vw, 3.1rem); }
 .beauty-guide__category { color: var(--berry); font-size: .57rem; font-weight: 700; letter-spacing: .16em; }
 .beauty-guide__heading h3 { margin: .45rem 0 .55rem; color: var(--ink); font-family: var(--serif); font-size: clamp(2.1rem, 3.8vw, 3.35rem); font-weight: 500; letter-spacing: -.045em; line-height: 1.1; }
@@ -149,14 +150,15 @@ button, a { -webkit-tap-highlight-color: transparent; }
 .beauty-step__number { align-self: start; padding-top: .08rem; color: #b96080; font-family: var(--serif); font-size: 1.1rem; }
 .beauty-step__copy h4 { margin: 0 0 .22rem; color: var(--ink); font-family: var(--serif); font-size: 1.12rem; font-weight: 500; line-height: 1.35; }
 .beauty-step__copy p { max-width: 540px; margin: 0; color: var(--ink-soft); font-size: .7rem; line-height: 1.7; }
-.beauty-step__toggle { display: inline-flex; min-width: 88px; min-height: 44px; align-items: center; justify-content: center; gap: .55rem; border: 1px solid #dfc0ca; padding: .55rem .7rem; color: var(--berry); background: white; font-size: .62rem; font-weight: 700; cursor: pointer; transition: border-color .2s ease, background .2s ease, color .2s ease; }
-.beauty-step__toggle:hover { border-color: var(--berry); }
+.beauty-step__toggle { display: inline-flex; min-width: 116px; min-height: 48px; align-items: center; justify-content: center; gap: .55rem; border: 1px solid var(--berry); border-radius: 2px; padding: .6rem .9rem; color: var(--berry); background: var(--pink-light); font-size: .72rem; font-weight: 700; cursor: pointer; box-shadow: 0 3px 0 rgba(142,23,79,.08); transition: transform .2s ease, border-color .2s ease, background .2s ease, color .2s ease, box-shadow .2s ease; }
+.beauty-step__toggle:hover { transform: translateY(-1px); border-color: var(--berry-deep); color: white; background: var(--berry); box-shadow: 0 5px 12px rgba(89,18,52,.15); }
 .beauty-step__toggle[aria-pressed="true"] { border-color: var(--berry); color: white; background: var(--berry); }
 .beauty-step__toggle > span:last-child { font-size: .9rem; line-height: 1; }
 .beauty-guide__progress-row { display: flex; align-items: center; justify-content: space-between; gap: 1rem; margin-top: .6rem; }
 .beauty-guide__progress-copy { margin: 0; color: var(--berry); font-size: .64rem; font-weight: 700; }
-.beauty-guide__reset { min-height: 40px; border: 0; border-bottom: 1px solid #d7a2b2; padding: .3rem 0; color: var(--berry); background: transparent; font-size: .62rem; font-weight: 700; cursor: pointer; }
-.beauty-guide__reset:disabled { color: #81777b; border-bottom-color: transparent; cursor: not-allowed; }
+.beauty-guide__reset { min-height: 44px; border: 1px solid #d7a2b2; padding: .45rem .75rem; color: var(--berry); background: white; font-size: .66rem; font-weight: 700; cursor: pointer; transition: border-color .2s ease, background .2s ease, color .2s ease; }
+.beauty-guide__reset:not(:disabled):hover { border-color: var(--berry); color: white; background: var(--berry); }
+.beauty-guide__reset:disabled { color: #81777b; border-color: #e6ccd3; background: #fffafa; cursor: not-allowed; }
 .beauty-progress { height: 6px; overflow: hidden; margin-top: .45rem; border-radius: 99px; background: #f0e2e6; }
 .beauty-progress__fill { display: block; width: 0; height: 100%; border-radius: inherit; background: var(--berry); transition: width .24s ease; }
 .beauty-guide__note { margin: 1rem 0 0; color: var(--ink-soft); font-size: .59rem; line-height: 1.6; }
@@ -262,25 +264,23 @@ button, a { -webkit-tap-highlight-color: transparent; }
   .footer-bottom { align-items: flex-start; font-size: .57rem; }
 }
 @media (max-width: 900px) {
-  .beauty-studio__workspace { grid-template-columns: 1fr; }
-  .beauty-studio__rail { padding: 1.25rem 1.5rem; }
-  .beauty-tabs { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .6rem; }
-  .beauty-tab { justify-content: center; gap: .65rem; }
-  .beauty-studio__aside-note { max-width: none; margin-top: .9rem; }
+  .beauty-studio__rail { grid-template-columns: 1fr; gap: .75rem; padding: 1rem 1.25rem; }
+  .beauty-tabs { gap: .55rem; }
+  .beauty-studio__aside-note { max-width: none; margin: .1rem 0 0; }
 }
 @media (max-width: 660px) {
   .beauty-studio { padding: 4.8rem var(--page-gutter) 4.3rem; }
   .beauty-studio__intro { display: block; margin-bottom: 1.8rem; }
   .beauty-studio__intro h2 { font-size: clamp(3rem, 11vw, 4.8rem); }
   .beauty-studio__intro > p { margin-top: .9rem; }
-  .beauty-studio__rail { padding: 1rem; }
-  .beauty-tabs { gap: .35rem; }
-  .beauty-tab { min-height: 48px; flex-direction: column; gap: .12rem; padding: .55rem .3rem; font-size: .67rem; }
-  .beauty-tab > span { font-size: .49rem; }
+  .beauty-studio__rail { padding: .9rem .75rem; }
+  .beauty-tabs { gap: .4rem; }
+  .beauty-tab { min-height: 58px; padding: .5rem .25rem; font-size: .78rem; }
+  .beauty-tab > span { font-size: .54rem; }
   .beauty-guide { padding: 1.2rem; }
   .beauty-guide__heading h3 { font-size: clamp(2rem, 8vw, 3rem); }
   .beauty-step { grid-template-columns: 27px minmax(0, 1fr); gap: .45rem .7rem; padding: .9rem 0; }
-  .beauty-step__toggle { grid-column: 2; justify-self: start; min-height: 44px; }
+  .beauty-step__toggle { grid-column: 2; justify-self: start; min-width: 116px; min-height: 48px; }
   .beauty-guide__progress-row { align-items: flex-start; }
   .beauty-guide__reset { min-height: 44px; }
 }
