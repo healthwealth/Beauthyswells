@@ -17,6 +17,15 @@
 - Ensure the stylesheet and interaction script load correctly in embedded Preview by using relative URLs for project-local assets.
 - Make the Skin, Body, and Style controls and step actions visibly clickable with higher contrast, larger touch targets, and clear selected, hover, and keyboard-focus states while keeping the existing brand palette.
 
+## Virtual makeup try-on — complete
+- Add an interactive makeup try-on with a sample portrait or local selfie capture, lipstick/blush/eye shades, intensity adjustment, original/look comparison, and reset.
+- Process the image and landmarks in the browser; do not upload or store the image. Before loading the model, show the MediaPipe metrics disclosure and require an explicit opt-in. Make loading, no-face, invalid-file, unsupported, and network-error states clear and accessible.
+- Preserve existing brand identity, anchors, trend content, and contact form behavior; make the try-on usable with keyboard and touch.
+
+## Launch campaign plan — complete
+- Create an organic-first, four-week campaign plan promoting Beauthy Swells and the virtual try-on, with explicit assumptions, audience, messaging, channel roles, content schedule, CTAs, privacy-safe KPIs, and resource checklist.
+- Do not invent products, prices, partnerships, geography, social handles, budget, reviews, or performance metrics.
+
 ## Contact — needs business details
 - The contact section includes a simple inquiry form and essential contact details.
 - The form validates the inquiry and opens a pre-filled email draft; the recipient is left blank because the business inbox was not provided. Add the preferred inquiry email to enable direct routing to Beauthy Swells.

@@ -40,6 +40,7 @@
       <a href="#story">Our story</a>
       <a href="#offerings">The good stuff</a>
       <a href="#beauty-edit">Beauty edit</a>
+      <a href="#makeup-tryon">Virtual try-on</a>
       <a href="#beauty-skills">Beauty skills</a>
       <a class="nav-cta" href="#contact">Say hello <span aria-hidden="true">↗</span></a>
     </nav>
@@ -54,6 +55,7 @@
         <div class="hero-actions">
           <a class="button button-light" href="#beauty-skills">Explore beauty skills <span aria-hidden="true">↘</span></a>
           <a class="text-link hero-text-link" href="#story">Meet Beauthy Swells <span aria-hidden="true">→</span></a>
+          <a class="text-link hero-text-link" href="#makeup-tryon">Try a makeup look <span aria-hidden="true">→</span></a>
         </div>
         <div class="hero-aside"><span class="hand-drawn-star" aria-hidden="true">✳</span> Your pace. Your place. Your kind of glow.</div>
       </div>
@@ -213,6 +215,77 @@
             </div>
             <p class="trend-sources">Trend references: <a href="https://newsroom.pinterest.com/news/beauty-trend-report-2026/" target="_blank" rel="noopener noreferrer">Pinterest's 2026 Beauty Trend Report</a> and <a href="https://www.vogue.com/article/spring-2026-beauty-trends" target="_blank" rel="noopener noreferrer">Vogue's Spring 2026 beauty trends</a>.</p>
           </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="makeup-studio" id="makeup-tryon" aria-labelledby="makeup-studio-heading">
+      <div class="makeup-studio__inner">
+        <div class="makeup-studio__intro">
+          <div>
+            <p class="eyebrow eyebrow-berry"><span aria-hidden="true">✦</span> THE VIRTUAL MAKEUP STUDIO</p>
+            <h2 id="makeup-studio-heading">Try a shade.<br><em>Keep your glow.</em></h2>
+          </div>
+          <p>Preview lip, cheek, and eye color on our sample portrait or your own selfie. Adjust the shade and intensity until the look feels like you.</p>
+        </div>
+        <div class="makeup-workspace">
+          <div class="makeup-preview-column">
+            <div class="makeup-stage" id="makeup-stage">
+              <div class="makeup-placeholder" id="makeup-placeholder">
+                <span class="makeup-placeholder__mark" aria-hidden="true">✳</span>
+                <p class="makeup-placeholder__title">Step up to your mirror.</p>
+                <p>Try the sample portrait or choose a selfie to begin.</p>
+              </div>
+              <canvas class="makeup-canvas" id="makeup-canvas" role="img" aria-label="Makeup try-on preview" hidden></canvas>
+            </div>
+            <div class="makeup-photo-actions">
+              <button class="button button-dark" id="makeup-sample" type="button">Try the sample portrait <span aria-hidden="true">↗</span></button>
+              <label class="button makeup-upload">
+                Choose or take a selfie <span aria-hidden="true">＋</span>
+                <input id="makeup-photo" type="file" accept="image/jpeg,image/png,image/webp" capture="user" aria-label="Choose or take a selfie">
+              </label>
+              <button class="makeup-clear" id="makeup-clear" type="button" hidden>Clear photo</button>
+            </div>
+            <p class="makeup-status" id="makeup-status" role="status" aria-live="polite">Choose a portrait, then opt in to start the on-device preview.</p>
+          </div>
+
+          <aside class="makeup-controls" aria-labelledby="makeup-controls-heading">
+            <div class="makeup-controls__intro">
+              <p class="eyebrow eyebrow-berry"><span aria-hidden="true">✦</span> YOUR LOOK, YOUR WAY</p>
+              <h3 id="makeup-controls-heading">Make it yours.</h3>
+              <p>Choose an area, play with color, and compare the result.</p>
+            </div>
+            <div class="makeup-area-picker" role="group" aria-label="Choose a makeup area">
+              <button type="button" data-makeup-area="lip" aria-pressed="true">Lip</button>
+              <button type="button" data-makeup-area="cheek" aria-pressed="false">Cheek</button>
+              <button type="button" data-makeup-area="eye" aria-pressed="false">Eye</button>
+            </div>
+            <fieldset class="makeup-shade-fieldset">
+              <legend id="makeup-shade-label">Choose a lip shade</legend>
+              <div class="makeup-swatches" id="makeup-swatches" role="group" aria-labelledby="makeup-shade-label">
+                <button class="makeup-swatch" type="button" aria-label="Rose lipstick shade" aria-pressed="true"><span class="makeup-swatch__chip" style="--swatch:#b85d77"></span><span>Rose</span></button>
+                <button class="makeup-swatch" type="button" aria-label="Petal lipstick shade" aria-pressed="false"><span class="makeup-swatch__chip" style="--swatch:#d88391"></span><span>Petal</span></button>
+                <button class="makeup-swatch" type="button" aria-label="Berry lipstick shade" aria-pressed="false"><span class="makeup-swatch__chip" style="--swatch:#8e174f"></span><span>Berry</span></button>
+                <button class="makeup-swatch" type="button" aria-label="Plum lipstick shade" aria-pressed="false"><span class="makeup-swatch__chip" style="--swatch:#66354f"></span><span>Plum</span></button>
+              </div>
+            </fieldset>
+            <div class="makeup-intensity">
+              <div class="makeup-intensity__label"><label for="makeup-intensity">Color intensity</label><output id="makeup-intensity-value" for="makeup-intensity">50%</output></div>
+              <input id="makeup-intensity" type="range" min="0" max="100" step="5" value="50">
+              <div class="makeup-intensity__scale" aria-hidden="true"><span>Soft</span><span>More vivid</span></div>
+            </div>
+            <div class="makeup-tool-actions">
+              <button class="makeup-secondary-button" id="makeup-compare" type="button" aria-pressed="false" disabled>Show original</button>
+              <button class="makeup-secondary-button" id="makeup-reset" type="button" disabled>Reset look</button>
+            </div>
+            <fieldset class="makeup-consent">
+              <legend>One privacy note before the mirror</legend>
+              <p id="makeup-privacy-copy">Your photo and detected face landmarks stay on this device. Beauthy Swells does not upload or store them. MediaPipe sends performance and utilization metrics about its APIs to Google; check below to opt in before the model loads. <a href="https://goo.gle/mediapipe-privacy" target="_blank" rel="noopener noreferrer">Read MediaPipe’s privacy notice</a>.</p>
+              <label class="makeup-consent__choice"><input id="makeup-metrics-consent" type="checkbox" aria-describedby="makeup-privacy-copy"><span>I agree to Google processing MediaPipe performance and utilization metrics when I use this feature.</span></label>
+            </fieldset>
+            <button class="button button-dark makeup-start" id="makeup-start" type="button" disabled>Preview this look <span aria-hidden="true">↗</span></button>
+            <p class="makeup-disclaimer">A digital color preview—not a product shade match or recommendation. Results vary with lighting and screen settings.</p>
+          </aside>
         </div>
       </div>
     </section>
