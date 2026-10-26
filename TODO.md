@@ -23,3 +23,15 @@
 
 ## Responsive experience — complete
 - Navigation and page layouts adapt for mobile, tablet, and desktop.
+
+## Website design review — complete
+- Review the website design and suggest three specific UI/UX improvements for a beauty brand.
+- Recommendations summarized in the project presentation: real consented testimonials, contextual guide-to-trend discovery, and technical contact-routing completion.
+
+## Customer testimonials and trending beauty products section — complete
+- Add a new landing page section highlighting customer testimonials and trending beauty products.
+- Added as the "Community & Trend Edit" section, pairing a permission-first testimonial invitation with sourced 2026 trends from Pinterest and Vogue. Verified as responsive and brand-consistent.
+
+## Project design and features presentation — complete
+- Create a presentation summarizing the Beauthy Swells project design and features.
+- Delivered as a six-slide HTML presentation with speaker notes and real-site visuals.
