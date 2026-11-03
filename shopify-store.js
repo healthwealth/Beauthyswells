@@ -498,8 +498,12 @@
 
       const existingVariants = product.variants?.nodes || [];
       const existingIds = new Set(existingVariants.map((variant) => variant.id));
-      const incomingVariants = (connection.nodes || [])
-        .filter((variant) => variant?.id && !existingIds.has(variant.id));
+      const incomingVariants = [];
+      for (const variant of connection.nodes || []) {
+        if (!variant?.id || existingIds.has(variant.id)) continue;
+        existingIds.add(variant.id);
+        incomingVariants.push(variant);
+      }
       if (connection.pageInfo.hasNextPage && !connection.pageInfo.endCursor) {
         throw new Error("More product options could not be loaded. Please try again.");
       }
