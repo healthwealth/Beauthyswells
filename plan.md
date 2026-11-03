@@ -1,6 +1,6 @@
-# Beauthy Swells — try-on implementation plan
+# Beauthy Swells — implementation plan
 
-**Mode:** Extension. Keep the existing Electric Bloom visual identity and page structure; add one virtual makeup studio without changing the existing story, trend content, anchors, form fields, or email-draft behavior.
+**Mode:** Extension. Preserve the existing Electric Bloom visual identity, beauty skills, virtual makeup try-on, story, trends, route, contact fields, and email-draft behavior; add the live Shopify shop and hosted-checkout flow without a production backend.
 
 ## Design and product decisions
 
@@ -16,16 +16,32 @@ The site remains a static, client-side application; no backend, database, accoun
 
 ## Project structure
 
-- `index.html`: existing single-page content plus navigation/hero links, the makeup studio, consent notice, file controls, and accessible status states.
-- `styles.css`: existing design tokens plus responsive studio, palette, swatch, canvas, consent, loading, and error-state styles.
-- `script.js`: lazy MediaPipe setup; in-memory photo lifecycle; landmark-based lip/cheek/eye overlays; shade, intensity, compare, reset, consent, and failure-state behavior.
+- `index.html`: existing single-page content plus the makeup studio and consent notice, and the `#shop` catalog, filters, accessible bag panel, and Shopify checkout link.
+- `styles.css`: existing design tokens plus responsive studio, catalog, product-card, filter, cart, consent, loading, and error-state styles.
+- `script.js`: existing beauty-guide interactions and the virtual makeup try-on; keep image and landmark processing in the browser.
+- `shopify-store.js`: browser-side Storefront API catalog pagination, loaded-product search/type filtering, variant selection, anonymous cart mutations, quantity controls, and checkout handoff.
+- `scripts/storefront-config.mjs`: validates the managed store hostname and serializes only the public Storefront token and API version.
+- `scripts/build.mjs`: builds the static `dist/` output and generates its public Shopify configuration from managed environment values.
+- `scripts/dev-server.mjs`: serves the static page and public Shopify configuration for Preview without writing credentials into source files.
 - `manus-routes.json`: stays on the existing `/` route; the studio is an in-page anchor, not a new page route.
 - `marketing-campaign-plan.md`: separate owner-facing, four-week campaign plan; not copied into the public static build.
-- `dist/`: static build output copied from the tracked site assets, unchanged in serving model.
+- `dist/`: generated static output, including the public Storefront configuration; ignored by Git and unchanged in serving model.
 
 ## Existing-UI decision record
 
 **Mode:** Extension. **Preserve:** the Electric Bloom rose/berry identity, typography, hero, current anchors, existing navigation destinations, trend content, contact fields, and mail-draft behavior. **Improve:** add a face-aware local makeup preview with explicit SDK-metrics consent, large shade controls, intensity, compare, reset, and accessible status states. **Remove:** nothing from the existing site; do not add a streaming camera, account, upload endpoint, or photo persistence. **Protected contracts:** route `/`, established anchors, and inquiry-form behavior remain unchanged. **Design read + dials:** match the existing visual language at Brand Fidelity 10; avoid unrelated layout or motion changes. **Highest-risk change:** the photo and facial landmarks are sensitive; gate the SDK/model behind the visitor's explicit metrics opt-in and keep image/landmark handling in memory in the browser. **Rollback/fallback:** show an on-page error if the SDK/model is unavailable, leave other site journeys usable, and remove the isolated studio and its handlers without changing the underlying static app.
+
+## Existing Shopify store integration
+
+**Mode:** Extension of the existing static site; do not migrate it to Hydrogen or add a server by default. The owner chose **Connect an existing store** in the WebDev Shopify integration card. Match the selected `beautyswells` store to the authorized Shopify Connector account using the card identifiers and connector metadata; never infer the storefront domain from the Admin URL or guess an account.
+
+Use Storefront API `2026-10` with the managed Storefront domain and browser-safe public access token.[7][8] The Admin credential is never used in frontend code. The read-only product audit returned 50 products with images, 49 marked available, and no `onlineStoreUrl` for those 50, so do not invent or construct product-page links. Instead, build a live, cursor-paginated catalog showing Shopify-sourced names, types, images, and variant IDs, prices, and availability from the Storefront Product and ProductVariant models.[9][17] Add search/type filters and accessible load-more behavior.
+
+Keep the initial variant query bounded; when Shopify reports more than 20 variants for a product, load the next set on demand using that product's own cursor. Preserve the selected option while new variants load and expose loading/error feedback accessibly.
+
+For purchase flow, use Shopify's official Storefront Cart API: user-triggered `cartCreate`, `cartLinesAdd`, `cartLinesUpdate`, and `cartLinesRemove` mutations; show Shopify-calculated `CartCost.subtotalAmount` and use `Cart.checkoutUrl` for hosted checkout.[10–16] Persist only the anonymous cart ID in browser `localStorage`, not customer identity or address. Cart creation occurs only after the visitor chooses Add to bag; this does not create or place an order. Render line IDs, quantities, and variant merchandise with the documented CartLine shape.[18] No product, price, inventory, discount, or order is changed by the site integration.
+
+**Project structure:** `index.html` adds the `#shop` catalog, product grid, search/type filters, and accessible bag panel. `styles.css` extends the Electric Bloom design with responsive product cards and cart controls. `shopify-store.js` calls the Storefront Product and Cart APIs in the browser, handles cursors, variants, cart state, and user-visible loading/error states; `script.js` retains the try-on and beauty-guide behavior. `scripts/storefront-config.mjs`, `scripts/build.mjs`, and `scripts/dev-server.mjs` validate managed settings and provide the public-only configuration in both Preview and static `dist/`. Keep `dist/` out of Git and `manus-routes.json` on the existing single `/` route. Existing try-on, beauty guide, and contact form remain intact. No production server, database, customer account, or Admin token is introduced.
 
 ## Sources
 
@@ -35,3 +51,15 @@ The site remains a static, client-side application; no backend, database, accoun
 [4]: https://registry.npmjs.org/@mediapipe/tasks-vision/latest "MediaPipe Tasks Vision package metadata"
 [5]: https://developers.google.com/edge/mediapipe/solutions/vision/face_landmarker "Face Landmarker overview and models"
 [6]: https://github.com/google-ai-edge/mediapipe/blob/master/docs/solutions/face_mesh.md "MediaPipe Face Mesh landmark coordinate and effect-rendering notes"
+[7]: https://shopify.dev/docs/api/usage/authentication "Shopify API authentication and public Storefront access tokens"
+[8]: https://shopify.dev/docs/api/storefront/2026-10 "Shopify Storefront API 2026-10"
+[9]: https://shopify.dev/docs/api/storefront/2026-10/objects/Product "Storefront Product fields"
+[10]: https://shopify.dev/docs/storefronts/headless/building-with-the-storefront-api/cart "Shopify Storefront Cart overview"
+[11]: https://shopify.dev/docs/api/storefront/2026-10/objects/Cart "Storefront Cart and hosted checkout URL"
+[12]: https://shopify.dev/docs/api/storefront/2026-10/mutations/cartCreate "Storefront cartCreate mutation"
+[13]: https://shopify.dev/docs/api/storefront/2026-10/mutations/cartLinesAdd "Storefront cartLinesAdd mutation"
+[14]: https://shopify.dev/docs/api/storefront/2026-10/mutations/cartLinesUpdate "Storefront cartLinesUpdate mutation"
+[15]: https://shopify.dev/docs/api/storefront/2026-10/mutations/cartLinesRemove "Storefront cartLinesRemove mutation"
+[16]: https://shopify.dev/docs/api/storefront/2026-10/objects/CartCost "Storefront CartCost and subtotal"
+[17]: https://shopify.dev/docs/api/storefront/2026-10/objects/ProductVariant "Storefront ProductVariant fields"
+[18]: https://shopify.dev/docs/api/storefront/2026-10/objects/CartLine "Storefront CartLine fields"

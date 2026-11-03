@@ -23,6 +23,8 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:opsz,wght@6..96,400;6..96,500;6..96,600&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="./styles.css">
+  <script src="./shopify-config.js" defer></script>
+  <script src="./shopify-store.js" defer></script>
   <script src="./script.js" defer></script>
 </head>
 <body>
@@ -42,6 +44,7 @@
       <a href="#beauty-edit">Beauty edit</a>
       <a href="#makeup-tryon">Virtual try-on</a>
       <a href="#beauty-skills">Beauty skills</a>
+      <a href="#shop">Shop</a>
       <a class="nav-cta" href="#contact">Say hello <span aria-hidden="true">↗</span></a>
     </nav>
   </header>
@@ -56,6 +59,7 @@
           <a class="button button-light" href="#beauty-skills">Explore beauty skills <span aria-hidden="true">↘</span></a>
           <a class="text-link hero-text-link" href="#story">Meet Beauthy Swells <span aria-hidden="true">→</span></a>
           <a class="text-link hero-text-link" href="#makeup-tryon">Try a makeup look <span aria-hidden="true">→</span></a>
+          <a class="text-link hero-text-link" href="#shop">Shop the live collection <span aria-hidden="true">→</span></a>
         </div>
         <div class="hero-aside"><span class="hand-drawn-star" aria-hidden="true">✳</span> Your pace. Your place. Your kind of glow.</div>
       </div>
@@ -287,6 +291,59 @@
             <p class="makeup-disclaimer">A digital color preview—not a product shade match or recommendation. Results vary with lighting and screen settings.</p>
           </aside>
         </div>
+      </div>
+    </section>
+
+    <section class="shop-section" id="shop" aria-labelledby="shop-heading">
+      <div class="shop-inner">
+        <div class="shop-intro">
+          <div>
+            <p class="eyebrow eyebrow-berry"><span aria-hidden="true">✦</span> THE BEAUTHY SWELLS SHOP</p>
+            <h2 id="shop-heading">Shop the <em>edit.</em></h2>
+          </div>
+          <p>Browse products synced from the connected Shopify store. Choose an option, add it to your bag, and continue to Shopify for checkout.</p>
+        </div>
+
+        <div class="shop-toolbar" aria-label="Find a product">
+          <div class="shop-field">
+            <label for="shop-search">Search loaded products</label>
+            <input id="shop-search" type="search" placeholder="Product name or type" autocomplete="off">
+          </div>
+          <div class="shop-field">
+            <label for="shop-type-filter">Product type</label>
+            <select id="shop-type-filter"><option value="">All product types</option></select>
+          </div>
+          <button class="shop-cart-toggle" id="shop-cart-toggle" type="button" aria-controls="shop-cart-panel" aria-expanded="false" aria-label="Open shopping bag, 0 items">
+            <span>My bag</span><span class="shop-cart-count" id="shop-cart-count" aria-hidden="true">0</span>
+          </button>
+        </div>
+
+        <div class="shop-feedback">
+          <p class="shop-status" id="shop-status" role="status" aria-live="polite">Connecting to the Shopify catalog…</p>
+          <button class="shop-retry" id="shop-retry" type="button" hidden>Try again</button>
+        </div>
+
+        <section class="shop-cart-panel" id="shop-cart-panel" role="region" aria-label="Shopping bag" hidden>
+          <div class="shop-cart-panel__header">
+            <div>
+              <p class="eyebrow eyebrow-berry">YOUR SELECTION</p>
+              <h3>Your bag</h3>
+            </div>
+            <button class="shop-cart-close" id="shop-cart-close" type="button">Close bag</button>
+          </div>
+          <p class="shop-cart-status" id="shop-cart-status" role="status" aria-live="polite"></p>
+          <p class="shop-cart-empty" id="shop-cart-empty">Add an item from the collection to begin.</p>
+          <ul class="shop-cart-lines" id="shop-cart-lines"></ul>
+          <div class="shop-cart-footer" id="shop-cart-footer" hidden>
+            <div class="shop-cart-subtotal"><span>Estimated subtotal</span><strong id="shop-cart-subtotal">—</strong></div>
+            <p>Shipping, taxes, and final totals are confirmed by Shopify at checkout.</p>
+            <a class="button button-dark shop-checkout" id="shop-checkout" href="#" target="_blank" rel="noopener noreferrer" hidden>Checkout on Shopify <span aria-hidden="true">↗</span></a>
+          </div>
+        </section>
+
+        <div class="shop-products" id="shop-products" role="list" aria-label="Products in the connected Shopify catalog"></div>
+        <button class="button button-dark shop-load-more" id="shop-load-more" type="button" hidden>Load more products</button>
+        <p class="shop-note">Product names, images, options, prices, and availability come directly from Shopify. Your bag ID is kept in this browser; checkout and payment happen on Shopify.</p>
       </div>
     </section>
 
