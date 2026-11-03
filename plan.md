@@ -43,6 +43,10 @@ For purchase flow, use Shopify's official Storefront Cart API: user-triggered `c
 
 **Project structure:** `index.html` adds the `#shop` catalog, product grid, search/type filters, and accessible bag panel. `styles.css` extends the Electric Bloom design with responsive product cards and cart controls. `shopify-store.js` calls the Storefront Product and Cart APIs in the browser, handles cursors, variants, cart state, and user-visible loading/error states; `script.js` retains the try-on and beauty-guide behavior. `scripts/storefront-config.mjs`, `scripts/build.mjs`, and `scripts/dev-server.mjs` validate managed settings and provide the public-only configuration in both Preview and static `dist/`. Keep `dist/` out of Git and `manus-routes.json` on the existing single `/` route. Existing try-on, beauty guide, and contact form remain intact. No production server, database, customer account, or Admin token is introduced.
 
+## Current shop availability
+
+Keep live Shopify product browsing, search, type filters, product pagination, and per-product variant pagination available. Shopify's hosted checkout reported that the store is not set up to receive orders, so the customer-facing shop stays browse-only until the owner confirms checkout readiness. A `SHOPPING_ENABLED = false` guard in `shopify-store.js` replaces add-to-bag and bag controls with disabled “Coming soon” states, keeps the bag panel and checkout link hidden, and skips cart restore/create/line mutations. Re-enable purchase actions only after the owner confirms the store is ready to accept orders.
+
 ## Sources
 
 [1]: https://developers.google.com/edge/mediapipe/solutions/vision/face_landmarker/web_js "Face Landmarker guide for Web"

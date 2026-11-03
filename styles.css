@@ -426,6 +426,9 @@ button, a { -webkit-tap-highlight-color: transparent; }
 .shop-field input, .shop-field select { display: block; width: 100%; min-height: 49px; border: 1px solid #d8aab8; border-radius: 0; padding: .65rem .8rem; color: var(--ink); background: white; font-size: .75rem; }
 .shop-cart-toggle { display: inline-flex; min-width: 134px; min-height: 49px; align-items: center; justify-content: space-between; gap: .7rem; border: 1px solid var(--berry); padding: .55rem .75rem; color: var(--berry); background: white; font-size: .7rem; font-weight: 700; cursor: pointer; transition: color .2s ease, background .2s ease; }
 .shop-cart-toggle:hover { color: white; background: var(--berry); }
+.shop-cart-toggle:disabled { justify-content: center; border-style: dashed; color: var(--berry); background: #fff8f6; cursor: not-allowed; opacity: 1; }
+.shop-cart-toggle:disabled:hover { color: var(--berry); background: #fff8f6; }
+.shop-cart-toggle:disabled .shop-cart-count { display: none; }
 .shop-cart-count { display: grid; min-width: 27px; height: 27px; place-items: center; border-radius: 50%; color: white; background: var(--berry); font-size: .65rem; font-variant-numeric: tabular-nums; }
 .shop-cart-toggle:hover .shop-cart-count { color: var(--berry); background: var(--pink); }
 .shop-feedback { display: flex; min-height: 2.8rem; align-items: center; justify-content: space-between; gap: 1rem; }
@@ -478,6 +481,7 @@ button, a { -webkit-tap-highlight-color: transparent; }
 .shop-product-card__add { width: 100%; min-height: 48px; margin-top: auto; color: white; background: var(--berry); font-size: .66rem; }
 .shop-product-card__add:hover:not(:disabled) { color: var(--berry-deep); background: var(--pink); }
 .shop-product-card__add:disabled { opacity: .58; cursor: not-allowed; transform: none; }
+.shop-product-card__add[data-coming-soon="true"]:disabled { border: 1px dashed #c77a95; color: var(--berry); background: #fff8f6; opacity: 1; }
 .shop-empty-results { grid-column: 1 / -1; margin: .5rem 0 1rem; color: var(--ink-soft); font-size: .78rem; }
 .shop-load-more { display: flex; width: fit-content; min-width: 190px; margin: 1.35rem auto 0; color: white; background: var(--berry); }
 .shop-load-more:hover:not(:disabled) { color: var(--berry-deep); background: var(--pink); }

@@ -27,6 +27,7 @@
     ? `https://${domain}/api/${encodeURIComponent(apiVersion)}/graphql.json`
     : "";
   const cartStorageKey = "beauthy.swells.shopify.cart-id.v1";
+  const SHOPPING_ENABLED = false;
 
   const state = {
     products: [],
@@ -209,6 +210,13 @@
   }
 
   function setCartPanel(open, moveFocus = false) {
+    if (!SHOPPING_ENABLED) {
+      cartPanel.hidden = true;
+      cartToggle.disabled = true;
+      cartToggle.setAttribute("aria-expanded", "false");
+      cartToggle.setAttribute("aria-label", "Online shopping is coming soon");
+      return;
+    }
     cartPanel.hidden = !open;
     cartToggle.setAttribute("aria-expanded", String(open));
     cartToggle.setAttribute(
@@ -407,9 +415,14 @@
         if (selectedVariant?.id) state.selectedVariantIds.set(product.id, selectedVariant.id);
         price.textContent = displayProductPrice(product, selectedVariant);
         const isAvailable = Boolean(selectedVariant?.availableForSale);
-        addButton.disabled = !isAvailable || state.cartBusy || state.loadingCart;
-        addButton.textContent = isAvailable ? "Add to bag" : "Sold out";
-        addButton.setAttribute("aria-label", `${isAvailable ? "Add" : "Unavailable:"} ${product.title || "product"} ${isAvailable ? "to your bag" : ""}`.trim());
+        addButton.disabled = !SHOPPING_ENABLED || !isAvailable || state.cartBusy || state.loadingCart;
+        addButton.textContent = SHOPPING_ENABLED ? (isAvailable ? "Add to bag" : "Sold out") : "Coming soon";
+        addButton.setAttribute(
+          "aria-label",
+          SHOPPING_ENABLED
+            ? `${isAvailable ? "Add" : "Unavailable:"} ${product.title || "product"} ${isAvailable ? "to your bag" : ""}`.trim()
+            : `Coming soon: ${product.title || "product"}`,
+        );
       });
     }
 
@@ -442,13 +455,25 @@
     }
 
     const canAdd = Boolean(selectedVariant && selectedVariant.availableForSale);
-    const addButton = makeElement("button", "button button-dark shop-product-card__add", canAdd ? "Add to bag" : "Sold out");
+    const addButton = makeElement(
+      "button",
+      "button button-dark shop-product-card__add",
+      SHOPPING_ENABLED ? (canAdd ? "Add to bag" : "Sold out") : "Coming soon",
+    );
     addButton.type = "button";
-    addButton.disabled = !canAdd || state.cartBusy || state.loadingCart;
-    addButton.setAttribute("aria-label", `${canAdd ? "Add" : "Unavailable:"} ${product.title || "product"} ${canAdd ? "to your bag" : ""}`.trim());
-    addButton.addEventListener("click", () => {
-      if (selectedVariant?.id) void addVariantToCart(selectedVariant, product.title || "Product");
-    });
+    addButton.disabled = !SHOPPING_ENABLED || !canAdd || state.cartBusy || state.loadingCart;
+    addButton.dataset.comingSoon = String(!SHOPPING_ENABLED);
+    addButton.setAttribute(
+      "aria-label",
+      SHOPPING_ENABLED
+        ? `${canAdd ? "Add" : "Unavailable:"} ${product.title || "product"} ${canAdd ? "to your bag" : ""}`.trim()
+        : `Coming soon: ${product.title || "product"}`,
+    );
+    if (SHOPPING_ENABLED) {
+      addButton.addEventListener("click", () => {
+        if (selectedVariant?.id) void addVariantToCart(selectedVariant, product.title || "Product");
+      });
+    }
 
     body.append(addButton);
     card.append(body);
@@ -607,6 +632,22 @@
   }
 
   function renderCart() {
+    if (!SHOPPING_ENABLED) {
+      cartPanel.hidden = true;
+      cartToggle.disabled = true;
+      cartToggle.setAttribute("aria-expanded", "false");
+      cartToggle.setAttribute("aria-label", "Online shopping is coming soon");
+      cartCount.textContent = "";
+      cartStatus.textContent = "Online shopping is coming soon.";
+      cartStatus.classList.remove("is-error");
+      cartEmpty.textContent = "Online shopping is coming soon.";
+      cartEmpty.hidden = false;
+      cartLinesElement.replaceChildren();
+      cartFooter.hidden = true;
+      checkoutLink.hidden = true;
+      checkoutLink.removeAttribute("href");
+      return;
+    }
     const lines = getCartLines();
     const quantity = cartQuantity();
     cartCount.textContent = String(quantity);
@@ -686,7 +727,7 @@
   }
 
   async function mutateCart({ query, variables, operation, focusLineId = null, focusAction = null }) {
-    if (state.cartBusy) return;
+    if (!SHOPPING_ENABLED || state.cartBusy) return;
     state.cartBusy = true;
     setCartMessage("Updating your bag…");
     renderCart();
@@ -715,7 +756,7 @@
   }
 
   async function addVariantToCart(variant, productTitle) {
-    if (!variant?.id || !variant.availableForSale || state.cartBusy || state.loadingCart) return;
+    if (!SHOPPING_ENABLED || !variant?.id || !variant.availableForSale || state.cartBusy || state.loadingCart) return;
     state.cartBusy = true;
     setCartMessage("Adding item to your bag…");
     renderCart();
@@ -763,6 +804,7 @@
   }
 
   async function changeCartLine(lineId, action) {
+    if (!SHOPPING_ENABLED) return;
     const line = getCartLines().find((item) => item.id === lineId);
     if (!line || !state.cartId || state.cartBusy) return;
 
@@ -788,6 +830,10 @@
   }
 
   async function restoreCart() {
+    if (!SHOPPING_ENABLED) {
+      renderCart();
+      return;
+    }
     const savedCartId = safeReadCartId();
     if (!savedCartId || !endpoint || !accessToken) {
       renderCart();
@@ -828,18 +874,20 @@
   retryButton.addEventListener("click", () => void loadProducts(state.products.length > 0));
   loadMoreButton.addEventListener("click", () => void loadProducts(true));
 
-  cartToggle.addEventListener("click", () => {
-    const open = cartPanel.hidden;
-    setCartPanel(open, open);
-  });
-  cartClose.addEventListener("click", () => setCartPanel(false, true));
-  cartPanel.addEventListener("click", (event) => {
-    const button = event.target.closest("[data-cart-action]");
-    if (button) void changeCartLine(button.dataset.lineId, button.dataset.cartAction);
-  });
+  if (SHOPPING_ENABLED) {
+    cartToggle.addEventListener("click", () => {
+      const open = cartPanel.hidden;
+      setCartPanel(open, open);
+    });
+    cartClose.addEventListener("click", () => setCartPanel(false, true));
+    cartPanel.addEventListener("click", (event) => {
+      const button = event.target.closest("[data-cart-action]");
+      if (button) void changeCartLine(button.dataset.lineId, button.dataset.cartAction);
+    });
+  }
 
   setCartPanel(false);
   renderCart();
-  void restoreCart();
+  if (SHOPPING_ENABLED) void restoreCart();
   void loadProducts(false);
 })();

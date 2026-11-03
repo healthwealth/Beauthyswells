@@ -26,10 +26,10 @@
 - Create an organic-first, four-week campaign plan promoting Beauthy Swells and the virtual try-on, with explicit assumptions, audience, messaging, channel roles, content schedule, CTAs, privacy-safe KPIs, and resource checklist.
 - Do not invent products, prices, partnerships, geography, social handles, budget, reviews, or performance metrics.
 
-## Shopify store integration — complete
+## Shopify live catalog and coming-soon purchase state — complete
 - Connect the existing `beautyswells` Shopify store selected by the owner in the WebDev integration card and match it to the authorized Shopify Connector account; do not guess its storefront domain or switch store accounts without a verified match.
 - Fetch only the connected Storefront's published catalog, showing Shopify-sourced product names, types, images, variants, prices, and availability with search, type filters, and cursor-based "Load more." When a product has more than 20 variants, allow visitors to load additional options using that product's cursor. Do not fabricate product URLs or claims; the audited catalog had no `onlineStoreUrl` values for the first 50 products.
-- Let visitors add available variants to an anonymous Shopify Cart, update quantities, remove lines, see Shopify's calculated subtotal, and follow Shopify's returned `checkoutUrl` to hosted checkout. Only user-initiated cart actions create/change a cart; do not create or modify products, prices, inventory, discounts, or orders.
+- Keep the shop browse-only until the owner confirms Shopify checkout is ready to accept orders. Replace add-to-bag and checkout actions with disabled “Coming soon” states; keep the live catalog and variant browsing visible, hide the shopping-bag panel, and do not restore or create carts, change cart lines, or navigate to checkout while shopping is paused.
 - Use the managed public Storefront token in browser configuration, never an Admin token. Persist only the anonymous cart ID in `localStorage`; do not collect customer identity or address. Keep the static site and existing routes/anchors, makeup try-on, and inquiry form; do not add a production backend or database.
 
 ## Contact — needs business details
