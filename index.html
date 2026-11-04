@@ -24,6 +24,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:opsz,wght@6..96,400;6..96,500;6..96,600&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="./styles.css">
   <link rel="stylesheet" href="./dressing-guide.css">
+  <link rel="stylesheet" href="./sample-portraits.css">
   <script type="module" src="./dressing-guide.js"></script>
   <script src="./shopify-config.js" defer></script>
   <script src="./shopify-store.js" defer></script>
@@ -377,8 +378,30 @@
               </div>
               <canvas class="makeup-canvas" id="makeup-canvas" role="img" aria-label="Makeup try-on preview" hidden></canvas>
             </div>
+            <fieldset class="makeup-sample-library" id="makeup-sample-library" aria-describedby="makeup-sample-help">
+              <legend class="makeup-sample-library__title">Choose a sample portrait</legend>
+              <p class="makeup-sample-library__note" id="makeup-sample-help">AI-created adult portraits. Any sample works with any area. Skin uses cheek tint—not skin-tone changes.</p>
+              <div class="makeup-sample-grid">
+                <button class="makeup-sample-card" type="button" data-sample-portrait="lip" aria-pressed="false" aria-busy="false" aria-label="Use the light-complexion sample for lip colour">
+                  <img src="/manus-storage/async-images/IYcji4lW7hEXqeKTK1rU98/image-1.webp" alt="" width="150" height="200" loading="lazy">
+                  <span class="makeup-sample-card__fallback" aria-hidden="true" hidden>Photo unavailable</span><strong>Lip colour</strong><small>Light complexion</small>
+                </button>
+                <button class="makeup-sample-card" type="button" data-sample-portrait="eyes" aria-pressed="false" aria-busy="false" aria-label="Use the medium olive-complexion sample for eye colour">
+                  <img src="/manus-storage/async-images/IYcji4lW7hEXqeKTK1rU98/image-2.webp" alt="" width="150" height="200" loading="lazy">
+                  <span class="makeup-sample-card__fallback" aria-hidden="true" hidden>Photo unavailable</span><strong>Eyes</strong><small>Medium olive complexion</small>
+                </button>
+                <button class="makeup-sample-card" type="button" data-sample-portrait="skin" aria-pressed="false" aria-busy="false" aria-label="Use the deep-complexion sample for skin and cheek colour">
+                  <img src="/manus-storage/async-images/IYcji4lW7hEXqeKTK1rU98/image-3.webp" alt="" width="150" height="200" loading="lazy">
+                  <span class="makeup-sample-card__fallback" aria-hidden="true" hidden>Photo unavailable</span><strong>Skin &amp; cheeks</strong><small>Deep complexion</small>
+                </button>
+                <button class="makeup-sample-card" type="button" data-sample-portrait="hair" aria-pressed="false" aria-busy="false" aria-label="Use the tan-complexion sample for hairstyles">
+                  <img src="/manus-storage/async-images/IYcji4lW7hEXqeKTK1rU98/image-4.webp" alt="" width="150" height="200" loading="lazy">
+                  <span class="makeup-sample-card__fallback" aria-hidden="true" hidden>Photo unavailable</span><strong>Hair</strong><small>Tan complexion</small>
+                </button>
+              </div>
+            </fieldset>
             <div class="makeup-photo-actions">
-              <button class="button button-dark" id="makeup-sample" type="button">Try the sample portrait <span aria-hidden="true">↗</span></button>
+              <button class="button button-dark" id="makeup-sample" type="button" aria-pressed="false" aria-busy="false">Try the original portrait <span aria-hidden="true">↗</span></button>
               <label class="button makeup-upload">
                 Choose or take a selfie <span aria-hidden="true">＋</span>
                 <input id="makeup-photo" type="file" accept="image/jpeg,image/png,image/webp" capture="user" aria-label="Choose or take a selfie">
@@ -396,7 +419,7 @@
             </div>
             <div class="makeup-area-picker" role="group" aria-label="Choose a makeup area">
               <button type="button" data-makeup-area="lip" aria-pressed="true">Lip</button>
-              <button type="button" data-makeup-area="cheek" aria-pressed="false">Cheek</button>
+              <button type="button" data-makeup-area="cheek" aria-pressed="false" aria-label="Skin and cheek colour, using cheek tint">Skin / cheeks</button>
               <button type="button" data-makeup-area="eye" aria-pressed="false">Eye</button>
               <button type="button" data-makeup-area="hair" aria-pressed="false">Hair</button>
             </div>

@@ -13,6 +13,7 @@ const publicFiles = [
   "script.js",
   "dressing-guide.css",
   "dressing-guide.js",
+  "sample-portraits.css",
   "shopify-store.js",
   "manus-routes.json",
   "favicon.svg",

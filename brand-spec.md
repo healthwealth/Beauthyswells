@@ -17,3 +17,14 @@ This feature extends the existing Electric Bloom identity; it does not redesign 
 The three dressing photographs are AI-created editorial illustrations of clothing inspiration, not stock availability or dynamic clothing try-on. Their final pixels replace the managed generating placeholders automatically. Garment palette swatches are functional colour data: their hues may extend beyond the UI's brand colours while interface chrome keeps the original design tokens. Outfit images are not recoloured when visitors change palette choices.
 
 Existing layout and motion stay intact. The new module uses thin borders, editorial spacing, strong berry selected controls, at least 44-pixel actions, keyboard focus states, and reduced-motion support. No testimonials, products, prices, or partnerships are fabricated.
+
+## Virtual Studio sample portraits
+
+| Suggested area | Managed portrait asset |
+| --- | --- |
+| Lip colour | `/manus-storage/async-images/IYcji4lW7hEXqeKTK1rU98/image-1.webp` |
+| Eyes | `/manus-storage/async-images/IYcji4lW7hEXqeKTK1rU98/image-2.webp` |
+| Skin & cheeks | `/manus-storage/async-images/IYcji4lW7hEXqeKTK1rU98/image-3.webp` |
+| Hair | `/manus-storage/async-images/IYcji4lW7hEXqeKTK1rU98/image-4.webp` |
+
+Four fictional adult portraits with varied complexions and neutral lighting were generated and visually checked for functional try-on rather than promotional hero art. Each completed asset is 1440 × 1920 pixels, with an unobstructed adult face and pulled-back hair. Any portrait can be used with the existing lip, eye, cheek, and hair controls. Skin means cheek colour, not a foundation match, texture correction, or skin lightening. The original portrait remains available as a fallback. Thumbnails and states use the original berry/plum/pink tokens, with two-column phone layout, keyboard focus and reduced-motion support.

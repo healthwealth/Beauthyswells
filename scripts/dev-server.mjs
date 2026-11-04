@@ -19,6 +19,7 @@ const publicFiles = new Map([
   ["/script.js", ["script.js", "text/javascript; charset=utf-8"]],
   ["/dressing-guide.css", ["dressing-guide.css", "text/css; charset=utf-8"]],
   ["/dressing-guide.js", ["dressing-guide.js", "text/javascript; charset=utf-8"]],
+  ["/sample-portraits.css", ["sample-portraits.css", "text/css; charset=utf-8"]],
   ["/shopify-store.js", ["shopify-store.js", "text/javascript; charset=utf-8"]],
   ["/manus-routes.json", ["manus-routes.json", "application/json; charset=utf-8"]],
   ["/favicon.svg", ["favicon.svg", "image/svg+xml"]],

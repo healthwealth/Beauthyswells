@@ -323,6 +323,7 @@ if (makeupStudio) {
   const makeupPlaceholder = makeupStudio.querySelector('#makeup-placeholder');
   const makeupPhotoInput = makeupStudio.querySelector('#makeup-photo');
   const makeupSampleButton = makeupStudio.querySelector('#makeup-sample');
+  const makeupSampleCards = Array.from(makeupStudio.querySelectorAll('[data-sample-portrait]'));
   const makeupClearButton = makeupStudio.querySelector('#makeup-clear');
   const makeupStatus = makeupStudio.querySelector('#makeup-status');
   const makeupConsent = makeupStudio.querySelector('#makeup-metrics-consent');
@@ -340,6 +341,12 @@ if (makeupStudio) {
   const mediaPipeWasmUrl = 'https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@1.1.1/wasm';
   const faceLandmarkerModelUrl = 'https://storage.googleapis.com/mediapipe-models/face_landmarker/face_landmarker/float16/1/face_landmarker.task';
   const samplePortraitUrl = '/manus-storage/async-images/3Ow18FyHR0jI7cuoIJ9Yqw/image-1.webp';
+  const samplePortraits = [
+    { id: 'lip', label: 'Lip colour sample', area: 'lip', url: '/manus-storage/async-images/IYcji4lW7hEXqeKTK1rU98/image-1.webp' },
+    { id: 'eyes', label: 'Eye colour sample', area: 'eye', url: '/manus-storage/async-images/IYcji4lW7hEXqeKTK1rU98/image-2.webp' },
+    { id: 'skin', label: 'Skin and cheek colour sample', area: 'cheek', url: '/manus-storage/async-images/IYcji4lW7hEXqeKTK1rU98/image-3.webp' },
+    { id: 'hair', label: 'Hairstyle sample', area: 'hair', url: '/manus-storage/async-images/IYcji4lW7hEXqeKTK1rU98/image-4.webp' }
+  ];
   // Each hairstyle overlay is a transparent image with an empty face opening.
   // `face` describes that opening as fractions of the image: its horizontal
   // center, width, and the y position of its hairline (top of the opening).
@@ -420,6 +427,8 @@ if (makeupStudio) {
   let hairDrag = { x: 0, y: 0 };
   let hairDragStart = null;
   let usingSamplePortrait = false;
+  let selectedSamplePortraitId = null;
+  let loadingSamplePortraitId = null;
   // Key face points for the sample portrait (measured once with the on-device model),
   // so hairstyles fit it immediately, even before the visitor opts in.
   const samplePortraitFacePoints = {
@@ -533,6 +542,16 @@ if (makeupStudio) {
 
   function setMakeupStatus(message) {
     makeupStatus.textContent = message;
+  }
+
+  function updateSamplePortraitButtons() {
+    makeupSampleCards.forEach((button) => {
+      const id = button.dataset.samplePortrait;
+      button.setAttribute('aria-pressed', String(Boolean(currentPhoto) && selectedSamplePortraitId === id));
+      button.setAttribute('aria-busy', String(loadingSamplePortraitId === id));
+    });
+    makeupSampleButton.setAttribute('aria-pressed', String(Boolean(currentPhoto) && usingSamplePortrait));
+    makeupSampleButton.setAttribute('aria-busy', String(loadingSamplePortraitId === 'original'));
   }
 
   function updateMakeupStartButton() {
@@ -730,9 +749,13 @@ if (makeupStudio) {
 
   async function setMakeupPhoto(source, label) {
     const requestRevision = ++photoRevision;
+    const sample = samplePortraits.find((portrait) => portrait.url === source);
     currentPhoto = null;
     faceLandmarks = null;
     usingSamplePortrait = source === samplePortraitUrl;
+    selectedSamplePortraitId = null;
+    loadingSamplePortraitId = sample?.id || (usingSamplePortrait ? 'original' : null);
+    updateSamplePortraitButtons();
     showingOriginal = false;
     if (photoObjectUrl) URL.revokeObjectURL(photoObjectUrl);
     photoObjectUrl = null;
@@ -762,24 +785,46 @@ if (makeupStudio) {
       }
       currentPhoto = image;
       photoObjectUrl = newPhotoObjectUrl;
+      selectedSamplePortraitId = sample?.id || null;
+      loadingSamplePortraitId = null;
+      updateSamplePortraitButtons();
+      if (sample) {
+        const card = makeupSampleCards.find((button) => button.dataset.samplePortrait === sample.id);
+        const thumbnail = card?.querySelector('img');
+        if (thumbnail) {
+          thumbnail.loading = 'eager';
+          if (card.classList.contains('has-image-error')) thumbnail.src = sample.url;
+          card.classList.remove('has-image-error');
+          const fallback = card.querySelector('.makeup-sample-card__fallback');
+          if (fallback) fallback.hidden = true;
+        }
+      }
       resizeMakeupCanvas(image);
       makeupCanvas.hidden = false;
       makeupPlaceholder.hidden = true;
       makeupClearButton.hidden = false;
-      hairDrag = { x: 0, y: 0 };
+      resetHairPlacement();
       updateLookButtons();
       drawMakeupOverlay();
-      setMakeupStatus(hasHairstyle()
-        ? `${label} is ready with your ${selectedShades.hair.name.toLowerCase()}. Drag it into place, or check the privacy note and choose Preview this look to fit it to your face.`
-        : `${label} is ready. Pick a hairstyle under Hair, or check the metrics notice and choose Preview this look.`);
+      const skinNote = sample?.id === 'skin' ? ' Skin uses cheek tint; it does not change your complexion.' : '';
+      const nextStep = activeMakeupArea === 'hair'
+        ? 'Choose a hairstyle, then drag or adjust it. Opt in and select Preview this look for an automatic face fit.'
+        : 'Choose a colour, opt in to the metrics notice, then select Preview this look to apply it.';
+      setMakeupStatus(`${label} is ready.${skinNote} ${nextStep}`);
     } catch {
       if (newPhotoObjectUrl) URL.revokeObjectURL(newPhotoObjectUrl);
       if (requestRevision !== photoRevision) return;
       currentPhoto = null;
+      usingSamplePortrait = false;
+      selectedSamplePortraitId = null;
+      loadingSamplePortraitId = null;
+      updateSamplePortraitButtons();
       makeupCanvas.hidden = true;
       makeupPlaceholder.hidden = false;
       makeupClearButton.hidden = true;
-      setMakeupStatus('We could not read that image. Choose a clear JPEG, PNG, or WebP photo and try again.');
+      setMakeupStatus(sample
+        ? 'This sample could not load. Try the original portrait below, or choose a clear selfie. You can also retry this sample.'
+        : 'We could not read that image. Choose a clear JPEG, PNG, or WebP photo and try again.');
     }
     updateMakeupStartButton();
   }
@@ -789,6 +834,9 @@ if (makeupStudio) {
     currentPhoto = null;
     faceLandmarks = null;
     usingSamplePortrait = false;
+    selectedSamplePortraitId = null;
+    loadingSamplePortraitId = null;
+    updateSamplePortraitButtons();
     showingOriginal = false;
     if (photoObjectUrl) URL.revokeObjectURL(photoObjectUrl);
     photoObjectUrl = null;
@@ -843,15 +891,17 @@ if (makeupStudio) {
 
     try {
       const landmarker = await loadFaceLandmarker();
-      if (startingPhotoRevision !== photoRevision) return;
       if (startingConsentRevision !== consentRevision || !makeupConsent.checked) {
         landmarker.close();
         faceLandmarker = null;
         faceLandmarkerPromise = null;
-        faceLandmarks = null;
-        drawMakeupOverlay();
+        if (startingPhotoRevision === photoRevision) {
+          faceLandmarks = null;
+          drawMakeupOverlay();
+        }
         return;
       }
+      if (startingPhotoRevision !== photoRevision) return;
 
       setMakeupStatus('Finding facial landmarks on this device…');
       previewStage = 'detecting';
@@ -884,6 +934,8 @@ if (makeupStudio) {
         ? `Your ${selectedShades.hair.name.toLowerCase()} is fitted to your face. All image analysis happened in this browser.`
         : 'Your look is ready. All image analysis and color rendering happened in this browser.');
     } catch {
+      // An earlier request must not overwrite a newer portrait or withdrawn consent.
+      if (startingPhotoRevision !== photoRevision || startingConsentRevision !== consentRevision || !makeupConsent.checked) return;
       faceLandmarks = null;
       drawMakeupOverlay();
       updateLookButtons();
@@ -898,6 +950,24 @@ if (makeupStudio) {
 
   makeupSampleButton.addEventListener('click', () => {
     setMakeupPhoto(samplePortraitUrl, 'Sample portrait');
+  });
+
+  makeupSampleCards.forEach((button) => {
+    const sample = samplePortraits.find((portrait) => portrait.id === button.dataset.samplePortrait);
+    if (!sample) return;
+    button.addEventListener('click', () => {
+      setMakeupArea(sample.area);
+      setMakeupPhoto(sample.url, sample.label);
+    });
+    const thumbnail = button.querySelector('img');
+    const fallback = button.querySelector('.makeup-sample-card__fallback');
+    const showThumbnailState = (failed) => {
+      button.classList.toggle('has-image-error', failed);
+      if (fallback) fallback.hidden = !failed;
+    };
+    thumbnail?.addEventListener('load', () => showThumbnailState(false));
+    thumbnail?.addEventListener('error', () => showThumbnailState(true));
+    if (thumbnail?.complete) showThumbnailState(thumbnail.naturalWidth === 0);
   });
 
   makeupPhotoInput.addEventListener('change', () => {
@@ -1032,6 +1102,7 @@ if (makeupStudio) {
 
   renderMakeupAreaButtons();
   renderMakeupSwatches();
+  updateSamplePortraitButtons();
   updateMakeupStartButton();
   window.addEventListener('pagehide', () => {
     if (photoObjectUrl) URL.revokeObjectURL(photoObjectUrl);
