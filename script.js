@@ -16,6 +16,16 @@ menuButton?.addEventListener('click', () => {
 });
 
 siteNav?.querySelectorAll('a').forEach((link) => link.addEventListener('click', closeMenu));
+document.addEventListener('keydown', (event) => {
+  if (event.key !== 'Escape' || menuButton?.getAttribute('aria-expanded') !== 'true') return;
+  closeMenu();
+  menuButton.focus();
+});
+document.addEventListener('pointerdown', (event) => {
+  if (menuButton?.getAttribute('aria-expanded') !== 'true') return;
+  if (menuButton?.contains(event.target) || siteNav?.contains(event.target)) return;
+  closeMenu();
+});
 document.querySelector('#year').textContent = new Date().getFullYear();
 
 const beautyGuides = {
@@ -115,7 +125,7 @@ if (beautyTablist && beautyTabs.length && beautyPanel) {
     toggle.className = 'beauty-step__toggle';
     toggle.type = 'button';
     toggle.setAttribute('aria-pressed', String(isComplete));
-    toggle.setAttribute('aria-label', `${isComplete ? 'Unmark' : 'Mark'} ${step.title} ${isComplete ? 'as not tried' : 'as tried'}`);
+    toggle.setAttribute('aria-label', `${isComplete ? 'Done: unmark' : 'Try it: mark'} ${step.title} ${isComplete ? 'as not tried' : 'as tried'}`);
     const actionText = document.createElement('span');
     actionText.textContent = isComplete ? 'Done' : 'Try it';
     const symbol = document.createElement('span');
@@ -129,7 +139,7 @@ if (beautyTablist && beautyTabs.length && beautyPanel) {
       if (isNowComplete) completed.add(index);
       else completed.delete(index);
       toggle.setAttribute('aria-pressed', String(isNowComplete));
-      toggle.setAttribute('aria-label', `${isNowComplete ? 'Unmark' : 'Mark'} ${step.title} ${isNowComplete ? 'as not tried' : 'as tried'}`);
+      toggle.setAttribute('aria-label', `${isNowComplete ? 'Done: unmark' : 'Try it: mark'} ${step.title} ${isNowComplete ? 'as not tried' : 'as tried'}`);
       actionText.textContent = isNowComplete ? 'Done' : 'Try it';
       symbol.textContent = isNowComplete ? '✓' : '＋';
       updateBeautyProgress();
@@ -444,10 +454,17 @@ if (makeupStudio) {
     return Boolean(selectedShades.hair?.face);
   }
 
+  function hairstyleDescription() {
+    if (!hasHairstyle()) return '';
+    const article = selectedShades.hair.name === 'Elegant updo' ? 'an' : 'a';
+    return `${article} ${selectedShades.hair.name.toLowerCase()} hairstyle`;
+  }
+
   function loadHairImage(style) {
     if (!style.url) return null;
     if (!hairImages.has(style.url)) {
       const image = new Image();
+      image.crossOrigin = 'anonymous';
       image.decoding = 'async';
       image.addEventListener('load', () => {
         if (selectedShades.hair === style) drawMakeupOverlay();
@@ -614,7 +631,7 @@ if (makeupStudio) {
     if (showingOriginal) return;
     if (!faceLandmarks) {
       drawHairOverlay();
-      if (hasHairstyle()) makeupCanvas.setAttribute('aria-label', `Portrait with a ${selectedShades.hair.name.toLowerCase()} hairstyle preview`);
+      if (hasHairstyle()) makeupCanvas.setAttribute('aria-label', `Portrait with ${hairstyleDescription()} preview`);
       return;
     }
 
@@ -676,7 +693,7 @@ if (makeupStudio) {
     drawHairOverlay();
 
     if (faceLandmarks.length && !showingOriginal) {
-      const hairName = selectedShades.hair?.face ? ` and a ${selectedShades.hair.name.toLowerCase()} hairstyle` : '';
+      const hairName = hasHairstyle() ? ` and ${hairstyleDescription()}` : '';
       if (activeMakeupArea === 'hair') {
         makeupCanvas.setAttribute('aria-label', hairName ? `Portrait with${hairName.replace(' and', '')} preview` : 'Portrait without a hairstyle preview');
       } else {
@@ -776,6 +793,8 @@ if (makeupStudio) {
         newPhotoObjectUrl = URL.createObjectURL(source);
         image.src = newPhotoObjectUrl;
       } else {
+        // Managed asset redirects must remain origin-clean for face detection.
+        image.crossOrigin = 'anonymous';
         image.src = source;
       }
       await image.decode();
@@ -905,7 +924,20 @@ if (makeupStudio) {
 
       setMakeupStatus('Finding facial landmarks on this device…');
       previewStage = 'detecting';
-      const result = landmarker.detect(makeupCanvas);
+      // Analyse only the original, downscaled image, never tint or hair overlays.
+      const analysisCanvas = document.createElement('canvas');
+      analysisCanvas.width = makeupCanvas.width;
+      analysisCanvas.height = makeupCanvas.height;
+      let result;
+      try {
+        const analysisContext = analysisCanvas.getContext('2d');
+        if (!analysisContext) throw new Error('Canvas processing is unavailable.');
+        analysisContext.drawImage(currentPhoto, 0, 0, analysisCanvas.width, analysisCanvas.height);
+        result = landmarker.detect(analysisCanvas);
+      } finally {
+        analysisCanvas.width = 0;
+        analysisCanvas.height = 0;
+      }
       if (startingPhotoRevision !== photoRevision) return;
       if (startingConsentRevision !== consentRevision || !makeupConsent.checked) {
         faceLandmarks = null;
@@ -1112,21 +1144,30 @@ if (makeupStudio) {
 
 const inquiryForm = document.querySelector('#inquiry-form');
 const formStatus = document.querySelector('#form-status');
+const inquiryName = inquiryForm?.elements.namedItem('name');
+const inquiryMessage = inquiryForm?.elements.namedItem('message');
+function updateInquiryTextValidity(field, message) {
+  if (field) field.setCustomValidity(field.value.trim() ? '' : message);
+}
+inquiryName?.addEventListener('input', () => updateInquiryTextValidity(inquiryName, 'Please enter your name.'));
+inquiryMessage?.addEventListener('input', () => updateInquiryTextValidity(inquiryMessage, 'Please add a message before opening your email draft.'));
 inquiryForm?.addEventListener('submit', (event) => {
   event.preventDefault();
+  updateInquiryTextValidity(inquiryName, 'Please enter your name.');
+  updateInquiryTextValidity(inquiryMessage, 'Please add a message before opening your email draft.');
   if (!inquiryForm.reportValidity()) return;
 
   const formData = new FormData(inquiryForm);
-  const subject = `A note for Beauthy Swells from ${formData.get('name')}`;
+  const subject = `A note for Beauthy Swells from ${String(formData.get('name')).trim()}`;
   const body = [
     'Hi Beauthy Swells,',
     '',
-    String(formData.get('message')),
+    String(formData.get('message')).trim(),
     '',
     `You can write back to me at ${formData.get('email')}.`,
     '',
     'Please choose the recipient in this draft, then press Send.'
   ].join('\n');
   window.location.href = `mailto:?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-  formStatus.textContent = 'Your email draft is ready. Choose the recipient and press Send to reach Beauthy Swells.';
+  formStatus.textContent = 'We asked your email app to open a draft. If it opens, choose the recipient and press Send. If nothing opens, check your email-app setup.';
 });

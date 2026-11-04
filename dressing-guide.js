@@ -342,6 +342,14 @@ function initializeDressingGuide() {
   }
 
   function renderSaved() {
+    const openDetails = new Map();
+    if (nodes.saved) {
+      [...nodes.saved.children].forEach((card) => {
+        const key = card.dataset.lookSignature;
+        const details = card.querySelector('.dress-saved-details');
+        if (key && details) openDetails.set(key, details.open);
+      });
+    }
     if (nodes.savedEmpty) {
       nodes.savedEmpty.hidden = savedLooks.length > 0;
       text(nodes.savedEmpty, 'No saved looks yet. Keep up to three in this visit; reloading clears them.');
@@ -350,6 +358,7 @@ function initializeDressingGuide() {
     const cards = savedLooks.map((look, index) => {
       const card = document.createElement('li');
       card.className = 'dress-saved-card';
+      card.dataset.lookSignature = signature(look);
       const title = `${LABELS.audience[look.audience]} · ${LABELS.occasion[look.occasion]} · ${look.paletteTitle}`;
       const heading = document.createElement('h4');
       heading.className = 'dress-saved-title';
@@ -372,6 +381,7 @@ function initializeDressingGuide() {
         pieces.append(item);
       });
       details.append(detailsLabel, pieces);
+      details.open = openDetails.get(signature(look)) || false;
       const remove = document.createElement('button');
       remove.type = 'button';
       remove.className = 'dress-saved-remove';

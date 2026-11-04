@@ -480,28 +480,17 @@
     return card;
   }
 
-  function focusVariantControl(productId) {
-    const card = [...productsElement.querySelectorAll(".shop-product-card")]
-      .find((candidate) => candidate.dataset.productId === productId);
-    const target = card?.querySelector(".shop-product-card__variant-more")
-      || card?.querySelector(".shop-product-card__variant")
-      || card?.querySelector(".shop-product-card__add");
-    target?.focus();
-  }
-
   async function loadMoreVariants(product, triggerButton) {
     const productId = product?.id;
     const pageInfo = product?.variants?.pageInfo;
     if (!productId || !pageInfo?.hasNextPage || state.loadingVariantProductIds.has(productId)) return;
 
-    const restoreFocus = document.activeElement === triggerButton;
     if (!pageInfo.endCursor) {
       state.variantStatusByProductId.set(productId, {
         message: "More product options could not be loaded. Please try again.",
         isError: true,
       });
       renderProducts();
-      if (restoreFocus) focusVariantControl(productId);
       return;
     }
 
@@ -551,11 +540,23 @@
     } finally {
       state.loadingVariantProductIds.delete(productId);
       renderProducts();
-      if (restoreFocus) focusVariantControl(productId);
     }
   }
 
   function renderProducts() {
+    const focusedControl = document.activeElement;
+    const focusedCard = productsElement.contains(focusedControl)
+      ? focusedControl.closest(".shop-product-card")
+      : null;
+    const focusProductId = focusedCard?.dataset.productId || null;
+    const focusSelector = focusedControl?.matches(".shop-product-card__variant-more")
+      ? ".shop-product-card__variant-more"
+      : focusedControl?.matches(".shop-product-card__variant")
+        ? ".shop-product-card__variant"
+        : focusedControl?.matches(".shop-product-card__add")
+          ? ".shop-product-card__add"
+          : null;
+    const focusValue = focusSelector === ".shop-product-card__variant" ? focusedControl.value : null;
     const search = searchInput.value.trim().toLocaleLowerCase();
     const selectedType = typeFilter.value;
     const filtered = state.products.filter((product) => {
@@ -567,6 +568,16 @@
     });
 
     productsElement.replaceChildren(...filtered.map(createProductCard));
+    if (focusProductId && focusSelector) {
+      const card = [...productsElement.querySelectorAll(".shop-product-card")]
+        .find((candidate) => candidate.dataset.productId === focusProductId);
+      let target = card?.querySelector(focusSelector);
+      if (target?.disabled || !target) target = card?.querySelector(".shop-product-card__variant");
+      if (target?.tagName === "SELECT" && focusValue && [...target.options].some((option) => option.value === focusValue)) {
+        target.value = focusValue;
+      }
+      target?.focus({ preventScroll: true });
+    }
     if (!filtered.length && state.products.length) {
       const empty = makeElement("p", "shop-empty-results", "No loaded products match that search. Load more products or try another term.");
       productsElement.append(empty);
@@ -870,7 +881,26 @@
   }
 
   searchInput.addEventListener("input", renderProducts);
-  typeFilter.addEventListener("change", renderProducts);
+  function announceFilteredProducts() {
+    if (state.loadingProducts || state.productError || !state.catalogLoaded) return;
+    const visibleCount = productsElement.querySelectorAll(".shop-product-card").length;
+    const search = searchInput.value.trim();
+    const type = typeFilter.value;
+    const filters = [search && `search “${search}”`, type && `type ${type}`].filter(Boolean);
+    if (visibleCount === 0) {
+      setShopStatus(`No loaded products match your${filters.length ? ` ${filters.join(" and ")}` : " current filters"}. Load more products or try another term.`);
+      return;
+    }
+    const total = state.products.length;
+    setShopStatus(filters.length
+      ? `Showing ${visibleCount} of ${total} loaded products matching ${filters.join(" and ")}.`
+      : `Showing all ${total} loaded products${state.hasNextPage ? ". Load more products to browse the rest." : " from Shopify."}`);
+  }
+  searchInput.addEventListener("input", announceFilteredProducts);
+  typeFilter.addEventListener("change", () => {
+    renderProducts();
+    announceFilteredProducts();
+  });
   retryButton.addEventListener("click", () => void loadProducts(state.products.length > 0));
   loadMoreButton.addEventListener("click", () => void loadProducts(true));
 
