@@ -16,9 +16,9 @@ The site remains a static, client-side application; no backend, database, accoun
 
 ## Project structure
 
-- `index.html`: existing single-page content plus the makeup studio and consent notice, and the `#shop` catalog, filters, accessible bag panel, and Shopify checkout link.
-- `styles.css`: existing design tokens plus responsive studio, catalog, product-card, filter, cart, consent, loading, and error-state styles.
-- `script.js`: existing beauty-guide interactions and the virtual makeup try-on; keep image and landmark processing in the browser.
+- `index.html`: existing single-page content plus the Beauty Skill Studio ritual builder, makeup studio and consent notice, and the `#shop` catalog, filters, accessible bag panel, and Shopify checkout link.
+- `styles.css`: existing design tokens plus responsive guide, ritual builder, makeup studio, catalog, product-card, filter, cart, consent, loading, and error-state styles.
+- `script.js`: existing beauty-guide interactions, a client-side ritual composed from guide tips, and the virtual makeup try-on; keep image and landmark processing in the browser.
 - `shopify-store.js`: browser-side Storefront API catalog pagination, loaded-product search/type filtering, variant selection, anonymous cart mutations, quantity controls, and checkout handoff.
 - `scripts/storefront-config.mjs`: validates the managed store hostname and serializes only the public Storefront token and API version.
 - `scripts/build.mjs`: builds the static `dist/` output and generates its public Shopify configuration from managed environment values.
@@ -30,6 +30,10 @@ The site remains a static, client-side application; no backend, database, accoun
 ## Existing-UI decision record
 
 **Mode:** Extension. **Preserve:** the Electric Bloom rose/berry identity, typography, hero, current anchors, existing navigation destinations, trend content, contact fields, and mail-draft behavior. **Improve:** add a face-aware local makeup preview with explicit SDK-metrics consent, large shade controls, intensity, compare, reset, and accessible status states. **Remove:** nothing from the existing site; do not add a streaming camera, account, upload endpoint, or photo persistence. **Protected contracts:** route `/`, established anchors, and inquiry-form behavior remain unchanged. **Design read + dials:** match the existing visual language at Brand Fidelity 10; avoid unrelated layout or motion changes. **Highest-risk change:** the photo and facial landmarks are sensitive; gate the SDK/model behind the visitor's explicit metrics opt-in and keep image/landmark handling in memory in the browser. **Rollback/fallback:** show an on-page error if the SDK/model is unavailable, leave other site journeys usable, and remove the isolated studio and its handlers without changing the underlying static app.
+
+## Interactive beauty ritual builder
+
+Extend the existing Beauty Skill Studio with a small client-side ritual builder in the same blush, berry, warm-paper, Bodoni Moda, and DM Sans visual system. Visitors can select any combination of the existing skin, body, and elegant-dressing tracks and choose a ritual size of one, two, or three steps. Build an ordered sequence by composing tips from the existing `beautyGuides` data; let visitors mark each step complete, announce progress accessibly, and reset or rebuild the ritual. Keep this state in memory for the current page visit; do not add accounts, tracking, time/health claims, new product promises, or a backend. Preserve the guide tabs, try-on consent flow, shop Coming soon guard, current route/anchors, and contact form.
 
 ## Existing Shopify store integration
 

@@ -17,6 +17,11 @@
 - Ensure the stylesheet and interaction script load correctly in embedded Preview by using relative URLs for project-local assets.
 - Make the Skin, Body, and Style controls and step actions visibly clickable with higher contrast, larger touch targets, and clear selected, hover, and keyboard-focus states while keeping the existing brand palette.
 
+## Personalized beauty ritual builder — complete
+- Let visitors choose any combination of the existing skin, body, and elegant-dressing focuses and choose a ritual size of one, two, or three steps.
+- Build the ordered ritual only from the existing beauty-guide tips; let visitors mark each step complete, see accessible progress updates, and reset or rebuild their ritual. Keep interaction state in the current page only.
+- Match the existing Beauthy Swells visual style and remain usable by keyboard and touch on mobile. Do not add accounts, tracking, time or health claims, new product promises, or a backend; preserve existing guide, try-on privacy, shop Coming soon, route, and contact behavior.
+
 ## Virtual makeup try-on — complete
 - Add an interactive makeup try-on with a sample portrait or local selfie capture, lipstick/blush/eye shades, intensity adjustment, original/look comparison, and reset.
 - Process the image and landmarks in the browser; do not upload or store the image. Before loading the model, show the MediaPipe metrics disclosure and require an explicit opt-in. Make loading, no-face, invalid-file, unsupported, and network-error states clear and accessible.

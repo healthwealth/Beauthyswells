@@ -160,6 +160,47 @@
             <p class="beauty-guide__note">Beauty is personal; treat these ideas as inspiration, not rules. Your checkmarks last for this visit.</p>
           </div>
         </div>
+        <div class="ritual-builder" id="ritual-builder" aria-labelledby="ritual-builder-heading">
+          <div class="ritual-builder__intro">
+            <p class="eyebrow eyebrow-berry"><span aria-hidden="true">✦</span> YOUR LITTLE BEAUTY EDIT</p>
+            <h3 id="ritual-builder-heading">Build a <em>little ritual.</em></h3>
+            <p>Choose what feels good today and let your own mix of skin, body, and style take shape.</p>
+          </div>
+          <form class="ritual-builder__form" id="ritual-form">
+            <fieldset class="ritual-fieldset">
+              <legend>What would you like to focus on?</legend>
+              <div class="ritual-focus-options">
+                <label class="ritual-focus-option"><input name="ritual-focus" type="checkbox" value="skin"><span class="ritual-focus-option__number">01</span><span class="ritual-focus-option__copy"><strong>Skin</strong><small>A fresh-feeling start</small></span></label>
+                <label class="ritual-focus-option"><input name="ritual-focus" type="checkbox" value="body"><span class="ritual-focus-option__number">02</span><span class="ritual-focus-option__copy"><strong>Body</strong><small>A little feel-good glow</small></span></label>
+                <label class="ritual-focus-option"><input name="ritual-focus" type="checkbox" value="style"><span class="ritual-focus-option__number">03</span><span class="ritual-focus-option__copy"><strong>Elegant dressing</strong><small>A finishing touch, your way</small></span></label>
+              </div>
+            </fieldset>
+            <fieldset class="ritual-fieldset ritual-fieldset--size">
+              <legend>How many little steps?</legend>
+              <div class="ritual-size-options">
+                <label><input name="ritual-size" type="radio" value="1"><span>One</span></label>
+                <label><input name="ritual-size" type="radio" value="2"><span>Two</span></label>
+                <label><input name="ritual-size" type="radio" value="3" checked><span>Three</span></label>
+              </div>
+            </fieldset>
+            <div class="ritual-builder__actions">
+              <button class="button button-dark" id="ritual-build" type="submit" disabled>Make my mini ritual <span aria-hidden="true">↗</span></button>
+              <p id="ritual-builder-status" role="status" aria-live="polite">Choose one or more focuses to begin.</p>
+            </div>
+          </form>
+          <section class="ritual-result" id="ritual-result" aria-label="Your little ritual preview">
+            <div class="ritual-result__empty" id="ritual-result-empty"><span aria-hidden="true">✳</span><p>Your little ritual will appear here. No rules, no rush—just ideas to make your own.</p></div>
+            <div id="ritual-result-content" hidden>
+              <div class="ritual-result__heading"><p class="eyebrow eyebrow-berry">MADE FOR YOUR MOMENT</p><h4 id="ritual-result-title">Your little edit</h4><p>Keep the steps that feel like you. Leave the rest.</p></div>
+              <ol class="ritual-result__steps" id="ritual-result-steps"></ol>
+              <div class="beauty-guide__progress-row ritual-result__progress-row">
+                <p class="beauty-guide__progress-copy" id="ritual-progress-copy" role="status" aria-live="polite">0 of 3 steps complete</p>
+                <button class="beauty-guide__reset" id="ritual-reset" type="button">Start fresh</button>
+              </div>
+              <div class="beauty-progress" id="ritual-progress" role="progressbar" aria-label="Your little ritual progress" aria-valuemin="0" aria-valuemax="3" aria-valuenow="0" aria-valuetext="0 of 3 steps complete"><span class="beauty-progress__fill" id="ritual-progress-fill"></span></div>
+            </div>
+          </section>
+        </div>
       </div>
     </section>
 

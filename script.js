@@ -176,6 +176,134 @@ if (beautyTablist && beautyTabs.length && beautyPanel) {
   renderBeautyGuide(activeBeautyFocus);
 }
 
+const ritualBuilder = document.querySelector('#ritual-builder');
+
+if (ritualBuilder) {
+  const ritualForm = ritualBuilder.querySelector('#ritual-form');
+  const focusInputs = Array.from(ritualBuilder.querySelectorAll('[name="ritual-focus"]'));
+  const buildButton = ritualBuilder.querySelector('#ritual-build');
+  const builderStatus = ritualBuilder.querySelector('#ritual-builder-status');
+  const emptyMessage = ritualBuilder.querySelector('#ritual-result-empty');
+  const resultContent = ritualBuilder.querySelector('#ritual-result-content');
+  const resultSteps = ritualBuilder.querySelector('#ritual-result-steps');
+  const progressCopy = ritualBuilder.querySelector('#ritual-progress-copy');
+  const progressBar = ritualBuilder.querySelector('#ritual-progress');
+  const progressFill = ritualBuilder.querySelector('#ritual-progress-fill');
+  const resetButton = ritualBuilder.querySelector('#ritual-reset');
+  let currentRitual = [];
+  const completedRitualSteps = new Set();
+
+  function updateRitualChoices() {
+    const selected = focusInputs.filter((input) => input.checked);
+    focusInputs.forEach((input) => input.closest('.ritual-focus-option')?.classList.toggle('is-selected', input.checked));
+    buildButton.disabled = selected.length === 0;
+    if (selected.length === 0) {
+      builderStatus.textContent = 'Choose one or more focuses to begin.';
+      return;
+    }
+    const noun = selected.length === 1 ? 'focus' : 'focuses';
+    builderStatus.textContent = `${selected.length} ${noun} selected. Make your ritual whenever you are ready.`;
+  }
+
+  function updateRitualProgress() {
+    const total = currentRitual.length;
+    const complete = completedRitualSteps.size;
+    const status = `${complete} of ${total} ${total === 1 ? 'step' : 'steps'} complete`;
+    progressCopy.textContent = status;
+    progressBar.setAttribute('aria-valuemax', String(total));
+    progressBar.setAttribute('aria-valuenow', String(complete));
+    progressBar.setAttribute('aria-valuetext', status);
+    progressFill.style.width = `${total ? (complete / total) * 100 : 0}%`;
+  }
+
+  function renderRitualSteps() {
+    resultSteps.replaceChildren();
+    currentRitual.forEach((step, index) => {
+      const item = document.createElement('li');
+      item.className = 'ritual-step';
+
+      const number = document.createElement('span');
+      number.className = 'ritual-step__number';
+      number.textContent = String(index + 1).padStart(2, '0');
+
+      const copy = document.createElement('div');
+      copy.className = 'ritual-step__copy';
+      const category = document.createElement('span');
+      category.className = 'ritual-step__category';
+      category.textContent = step.category;
+      const title = document.createElement('h5');
+      title.textContent = step.title;
+      const description = document.createElement('p');
+      description.textContent = step.text;
+      copy.append(category, title, description);
+
+      const complete = completedRitualSteps.has(index);
+      const toggle = document.createElement('button');
+      toggle.className = 'ritual-step__toggle';
+      toggle.type = 'button';
+      toggle.setAttribute('aria-pressed', String(complete));
+      toggle.setAttribute('aria-label', `${complete ? 'Unmark' : 'Mark'} ${step.title} ${complete ? 'as not complete' : 'complete'}`);
+      toggle.textContent = complete ? 'Done ✓' : 'Try this';
+      toggle.addEventListener('click', () => {
+        const isComplete = !completedRitualSteps.has(index);
+        if (isComplete) completedRitualSteps.add(index);
+        else completedRitualSteps.delete(index);
+        toggle.setAttribute('aria-pressed', String(isComplete));
+        toggle.setAttribute('aria-label', `${isComplete ? 'Unmark' : 'Mark'} ${step.title} ${isComplete ? 'as not complete' : 'complete'}`);
+        toggle.textContent = isComplete ? 'Done ✓' : 'Try this';
+        item.classList.toggle('is-complete', isComplete);
+        updateRitualProgress();
+      });
+
+      item.append(number, copy, toggle);
+      resultSteps.append(item);
+    });
+  }
+
+  ritualForm.addEventListener('change', updateRitualChoices);
+  ritualForm.addEventListener('submit', (event) => {
+    event.preventDefault();
+    const focuses = focusInputs.filter((input) => input.checked).map((input) => input.value);
+    if (!focuses.length) return;
+
+    const size = Number(ritualBuilder.querySelector('[name="ritual-size"]:checked')?.value || 1);
+    const usedSteps = new Map(focuses.map((focus) => [focus, 0]));
+    currentRitual = Array.from({ length: Math.min(3, Math.max(1, size)) }, (_, index) => {
+      const focus = focuses[index % focuses.length];
+      const guide = beautyGuides[focus];
+      const stepIndex = usedSteps.get(focus) || 0;
+      usedSteps.set(focus, stepIndex + 1);
+      const source = guide.steps[stepIndex % guide.steps.length];
+      return { category: guide.label.replace(/^\d+\s*\/\s*/, ''), ...source };
+    });
+
+    completedRitualSteps.clear();
+    emptyMessage.hidden = true;
+    resultContent.hidden = false;
+    renderRitualSteps();
+    updateRitualProgress();
+    builderStatus.textContent = `Your ${currentRitual.length}-step ritual is ready. Mark each idea as you try it.`;
+  });
+
+  resetButton.addEventListener('click', () => {
+    currentRitual = [];
+    completedRitualSteps.clear();
+    focusInputs.forEach((input) => {
+      input.checked = false;
+      input.closest('.ritual-focus-option')?.classList.remove('is-selected');
+    });
+    emptyMessage.hidden = false;
+    resultContent.hidden = true;
+    resultSteps.replaceChildren();
+    updateRitualChoices();
+    resetButton.blur();
+    builderStatus.textContent = 'Your ritual is clear. Choose a focus whenever you are ready.';
+    focusInputs[0]?.focus();
+  });
+
+  updateRitualChoices();
+}
+
 const makeupStudio = document.querySelector('#makeup-tryon');
 
 if (makeupStudio) {
