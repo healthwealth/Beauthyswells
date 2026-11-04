@@ -23,6 +23,11 @@
 - Match the existing Beauthy Swells visual style and remain usable by keyboard and touch on mobile. Do not add accounts, tracking, time or health claims, new product promises, or a backend; preserve existing guide, try-on privacy, shop Coming soon, route, and contact behavior.
 
 ## Virtual makeup try-on — complete
+
+## Hairstyles on the face — complete
+- Add hairstyles to the face in the virtual try-on: a Hair area with sleek bob, long waves, soft curls, elegant updo, and No hairstyle options shown as thumbnails.
+- Fit the chosen hairstyle to the detected face (size, hairline, and head tilt) on the sample portrait or the visitor's selfie, layered with makeup; let visitors adjust hairstyle size and hairline position and clear it with Reset. Keep the existing consent and on-device privacy behavior.
+- Add a Hair track with face-framing hairstyle tips to the Beauty Skill Studio and a Hair focus to the ritual builder.
 - Add an interactive makeup try-on with a sample portrait or local selfie capture, lipstick/blush/eye shades, intensity adjustment, original/look comparison, and reset.
 - Process the image and landmarks in the browser; do not upload or store the image. Before loading the model, show the MediaPipe metrics disclosure and require an explicit opt-in. Make loading, no-face, invalid-file, unsupported, and network-error states clear and accessible.
 - Preserve existing brand identity, anchors, trend content, and contact form behavior; make the try-on usable with keyboard and touch.

@@ -133,7 +133,7 @@ button, a { -webkit-tap-highlight-color: transparent; }
 .beauty-studio__workspace { display: flex; flex-direction: column; overflow: hidden; border: 1px solid #e6ccd3; background: white; box-shadow: 0 12px 30px rgba(89,18,52,.06); }
 .beauty-studio__rail { display: grid; grid-template-columns: max-content minmax(0, 1fr) minmax(170px, .5fr); align-items: center; gap: 1rem 1.5rem; border-bottom: 1px solid #e6ccd3; padding: 1rem clamp(1.1rem, 3vw, 2rem); background: var(--pink-light); }
 .beauty-studio__rail-label { margin: 0; color: var(--berry); font-size: .66rem; font-weight: 700; letter-spacing: .14em; }
-.beauty-tabs { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .65rem; margin: 0; }
+.beauty-tabs { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: .65rem; margin: 0; }
 .beauty-tab { display: flex; min-height: 68px; flex-direction: column; align-items: center; justify-content: center; gap: .15rem; border: 1px solid #c77a95; border-radius: 3px; padding: .6rem .8rem; color: var(--berry); background: white; text-align: center; font-size: .88rem; line-height: 1.25; font-weight: 700; cursor: pointer; box-shadow: 0 3px 0 rgba(142,23,79,.08); transition: transform .2s ease, border-color .2s ease, background .2s ease, color .2s ease, box-shadow .2s ease; }
 .beauty-tab:hover { transform: translateY(-2px); border-color: var(--berry); background: #fffafb; box-shadow: 0 6px 14px rgba(89,18,52,.12); }
 .beauty-tab:active { transform: translateY(0); }
@@ -223,7 +223,7 @@ button, a { -webkit-tap-highlight-color: transparent; }
 .makeup-controls__intro .eyebrow { margin-bottom: .45rem; }
 .makeup-controls__intro h3 { margin: 0; color: var(--ink); font-family: var(--serif); font-size: clamp(2rem, 3vw, 2.75rem); font-weight: 500; letter-spacing: -.045em; line-height: 1.1; }
 .makeup-controls__intro > p:last-child { margin: .45rem 0 1.15rem; color: var(--ink-soft); font-size: .73rem; line-height: 1.65; }
-.makeup-area-picker { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .45rem; }
+.makeup-area-picker { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: .45rem; }
 .makeup-area-picker button { min-height: 48px; border: 1px solid #d9b6c1; padding: .55rem .4rem; color: var(--berry); background: white; font-size: .72rem; font-weight: 700; cursor: pointer; transition: color .18s ease, background .18s ease, border-color .18s ease, transform .18s ease; }
 .makeup-area-picker button:hover { border-color: var(--berry); background: #fff7f9; transform: translateY(-1px); }
 .makeup-area-picker button[aria-pressed="true"] { border-color: var(--berry-deep); color: white; background: var(--berry); }
@@ -585,4 +585,15 @@ button, a { -webkit-tap-highlight-color: transparent; }
   .ritual-step { grid-template-columns: 23px minmax(0, 1fr); align-items: start; gap: .5rem; }
   .ritual-step__toggle { grid-column: 2; justify-self: start; }
   .ritual-builder__actions .button { width: 100%; }
+}
+
+/* Hairstyle try-on */
+.makeup-swatches:has(.makeup-swatch--hair) { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+.makeup-swatch--hair { min-height: 92px; }
+.makeup-swatch__chip--hair { display: grid; width: 52px; height: 62px; place-items: center; border-radius: 6px; color: var(--berry); background: #fff1f4 center / cover no-repeat; font-size: 1.1rem; }
+.makeup-hair-fit[hidden], .makeup-intensity[hidden] { display: none !important; }
+.makeup-hair-tip { margin: .8rem 0 0; color: var(--ink-soft); font-size: .62rem; line-height: 1.6; }
+@media (max-width: 520px) {
+  .makeup-swatches:has(.makeup-swatch--hair) { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .beauty-tabs { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }

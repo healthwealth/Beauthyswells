@@ -138,6 +138,7 @@
               <button class="beauty-tab" id="beauty-tab-skin" type="button" role="tab" aria-label="Skin beauty skills" aria-selected="true" aria-controls="beauty-guide-panel" tabindex="0" data-beauty-focus="skin"><span>01</span>Skin</button>
               <button class="beauty-tab" id="beauty-tab-body" type="button" role="tab" aria-label="Body beauty skills" aria-selected="false" aria-controls="beauty-guide-panel" tabindex="-1" data-beauty-focus="body"><span>02</span>Body</button>
               <button class="beauty-tab" id="beauty-tab-style" type="button" role="tab" aria-label="Elegant dressing skills" aria-selected="false" aria-controls="beauty-guide-panel" tabindex="-1" data-beauty-focus="style"><span>03</span>Style</button>
+              <button class="beauty-tab" id="beauty-tab-hair" type="button" role="tab" aria-label="Hairstyle skills for your face" aria-selected="false" aria-controls="beauty-guide-panel" tabindex="-1" data-beauty-focus="hair"><span>04</span>Hair</button>
             </div>
             <p class="beauty-studio__aside-note">A tiny practice is enough. Explore at your own pace.</p>
           </aside>
@@ -173,6 +174,7 @@
                 <label class="ritual-focus-option"><input name="ritual-focus" type="checkbox" value="skin"><span class="ritual-focus-option__number">01</span><span class="ritual-focus-option__copy"><strong>Skin</strong><small>A fresh-feeling start</small></span></label>
                 <label class="ritual-focus-option"><input name="ritual-focus" type="checkbox" value="body"><span class="ritual-focus-option__number">02</span><span class="ritual-focus-option__copy"><strong>Body</strong><small>A little feel-good glow</small></span></label>
                 <label class="ritual-focus-option"><input name="ritual-focus" type="checkbox" value="style"><span class="ritual-focus-option__number">03</span><span class="ritual-focus-option__copy"><strong>Elegant dressing</strong><small>A finishing touch, your way</small></span></label>
+                <label class="ritual-focus-option"><input name="ritual-focus" type="checkbox" value="hair"><span class="ritual-focus-option__number">04</span><span class="ritual-focus-option__copy"><strong>Hair</strong><small>A style that frames your face</small></span></label>
               </div>
             </fieldset>
             <fieldset class="ritual-fieldset ritual-fieldset--size">
@@ -268,10 +270,10 @@
       <div class="makeup-studio__inner">
         <div class="makeup-studio__intro">
           <div>
-            <p class="eyebrow eyebrow-berry"><span aria-hidden="true">✦</span> THE VIRTUAL MAKEUP STUDIO</p>
-            <h2 id="makeup-studio-heading">Try a shade.<br><em>Keep your glow.</em></h2>
+            <p class="eyebrow eyebrow-berry"><span aria-hidden="true">✦</span> THE VIRTUAL MAKEUP &amp; HAIR STUDIO</p>
+            <h2 id="makeup-studio-heading">Try a shade.<br><em>Try a hairstyle.</em></h2>
           </div>
-          <p>Preview lip, cheek, and eye color on our sample portrait or your own selfie. Adjust the shade and intensity until the look feels like you.</p>
+          <p>Preview lip, cheek, and eye color—and try hairstyles framed around your face—on our sample portrait or your own selfie. Adjust until the look feels like you.</p>
         </div>
         <div class="makeup-workspace">
           <div class="makeup-preview-column">
@@ -304,6 +306,7 @@
               <button type="button" data-makeup-area="lip" aria-pressed="true">Lip</button>
               <button type="button" data-makeup-area="cheek" aria-pressed="false">Cheek</button>
               <button type="button" data-makeup-area="eye" aria-pressed="false">Eye</button>
+              <button type="button" data-makeup-area="hair" aria-pressed="false">Hair</button>
             </div>
             <fieldset class="makeup-shade-fieldset">
               <legend id="makeup-shade-label">Choose a lip shade</legend>
@@ -314,10 +317,23 @@
                 <button class="makeup-swatch" type="button" aria-label="Plum lipstick shade" aria-pressed="false"><span class="makeup-swatch__chip" style="--swatch:#66354f"></span><span>Plum</span></button>
               </div>
             </fieldset>
-            <div class="makeup-intensity">
+            <div class="makeup-intensity" id="makeup-intensity-group">
               <div class="makeup-intensity__label"><label for="makeup-intensity">Color intensity</label><output id="makeup-intensity-value" for="makeup-intensity">50%</output></div>
               <input id="makeup-intensity" type="range" min="0" max="100" step="5" value="50">
               <div class="makeup-intensity__scale" aria-hidden="true"><span>Soft</span><span>More vivid</span></div>
+            </div>
+            <div class="makeup-hair-fit" id="makeup-hair-fit" hidden>
+              <div class="makeup-intensity">
+                <div class="makeup-intensity__label"><label for="makeup-hair-size">Hairstyle size</label><output id="makeup-hair-size-value" for="makeup-hair-size">100%</output></div>
+                <input id="makeup-hair-size" type="range" min="80" max="130" step="2" value="100">
+                <div class="makeup-intensity__scale" aria-hidden="true"><span>Closer</span><span>Fuller</span></div>
+              </div>
+              <div class="makeup-intensity">
+                <div class="makeup-intensity__label"><label for="makeup-hair-lift">Hairline position</label><output id="makeup-hair-lift-value" for="makeup-hair-lift">0</output></div>
+                <input id="makeup-hair-lift" type="range" min="-20" max="20" step="1" value="0">
+                <div class="makeup-intensity__scale" aria-hidden="true"><span>Lower</span><span>Higher</span></div>
+              </div>
+              <p class="makeup-hair-tip" id="makeup-hair-tip">Choose a hairstyle to frame your face. Fine-tune its size and hairline until it sits naturally.</p>
             </div>
             <div class="makeup-tool-actions">
               <button class="makeup-secondary-button" id="makeup-compare" type="button" aria-pressed="false" disabled>Show original</button>

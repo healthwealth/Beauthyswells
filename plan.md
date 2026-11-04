@@ -37,6 +37,10 @@ Extend the existing Beauty Skill Studio with a small client-side ritual builder 
 
 ## Existing Shopify store integration
 
+## Hairstyles for your face
+
+Add Hair as a fourth area in the virtual makeup studio. Four generated transparent hairstyle overlays (sleek bob, long waves, soft curls, elegant updo) plus "No hairstyle" appear as thumbnail swatches. After the visitor opts in and the on-device face landmarks are found, the chosen hairstyle is scaled to the face width (landmarks 234/454), anchored just above the forehead landmark (10), and rotated with the eye line (33/263); it layers over any makeup preview. Visitors can fine-tune hairstyle size and hairline position; Reset clears it. Photos stay in the browser, as before. Also add a fourth "Hair" track to the Beauty Skill Studio with face-framing tips and a Hair focus in the ritual builder.
+
 **Mode:** Extension of the existing static site; do not migrate it to Hydrogen or add a server by default. The owner chose **Connect an existing store** in the WebDev Shopify integration card. Match the selected `beautyswells` store to the authorized Shopify Connector account using the card identifiers and connector metadata; never infer the storefront domain from the Admin URL or guess an account.
 
 Use Storefront API `2026-10` with the managed Storefront domain and browser-safe public access token.[7][8] The Admin credential is never used in frontend code. The read-only product audit returned 50 products with images, 49 marked available, and no `onlineStoreUrl` for those 50, so do not invent or construct product-page links. Instead, build a live, cursor-paginated catalog showing Shopify-sourced names, types, images, and variant IDs, prices, and availability from the Storefront Product and ProductVariant models.[9][17] Add search/type filters and accessible load-more behavior.
