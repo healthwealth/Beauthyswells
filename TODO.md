@@ -61,3 +61,10 @@
 ## Project design and features presentation — complete
 - Create a presentation summarizing the Beauthy Swells project design and features.
 - Delivered as a six-slide HTML presentation with speaker notes and real-site visuals.
+
+## Dressing for women, men, and children across complexions — complete
+- Add an interactive dressing guide for women, men, and children, with outfit ideas for different complexions; keep all colour suggestions optional and never rank, diagnose, or infer a person's skin tone or ethnicity.
+- Let visitors self-select Explore all, Fair, Light, Medium, Tan, Deep, or Very deep complexion; Not sure, Warm, Cool, or Neutral undertone; and Everyday, Work/school, or Celebration. Update outfit pieces, four labelled colour swatches, and personalised contrast guidance when choices change. Offer additional palettes, reset, and up to three saved looks kept only for the current page visit.
+- Show inclusive category inspiration photography for women, men, and children; disclose AI-created imagery and that the photos are references rather than dynamically recoloured garments, available products, or virtual clothing try-on.
+- Children's outfit guidance stays age-appropriate and comfort-first: washable layers, movement, secure shoes, no adult glamour, makeup, or body-correction advice. Collect no photographs or child identity data in this guide.
+- Keep the existing Electric Bloom style, mobile and keyboard usability, live status announcements, all existing routes/anchors, hair and makeup privacy, contact behavior, and browse-only Shopify Coming soon state. Keep the site static with no new backend or database.

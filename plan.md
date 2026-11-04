@@ -19,6 +19,9 @@ The site remains a static, client-side application; no backend, database, accoun
 - `index.html`: existing single-page content plus the Beauty Skill Studio ritual builder, makeup studio and consent notice, and the `#shop` catalog, filters, accessible bag panel, and Shopify checkout link.
 - `styles.css`: existing design tokens plus responsive guide, ritual builder, makeup studio, catalog, product-card, filter, cart, consent, loading, and error-state styles.
 - `script.js`: existing beauty-guide interactions, a client-side ritual composed from guide tips, and the virtual makeup try-on; keep image and landmark processing in the browser.
+- `dressing-guide.js`: standalone client-side dressing ideas for women, men, and children; self-selected complexion/undertone/occasion, palette exploration, and in-memory saved looks.
+- `dressing-guide.css`: matching editorial dressing workspace, labelled swatches, age-appropriate image panels, saved outfits, and responsive controls.
+- `scripts/test-dressing.mjs`: pure outfit and real-markup DOM tests; the optional test-only DOM library is installed outside the production site.
 - `shopify-store.js`: browser-side Storefront API catalog pagination, loaded-product search/type filtering, variant selection, anonymous cart mutations, quantity controls, and checkout handoff.
 - `scripts/storefront-config.mjs`: validates the managed store hostname and serializes only the public Storefront token and API version.
 - `scripts/build.mjs`: builds the static `dist/` output and generates its public Shopify configuration from managed environment values.
@@ -75,3 +78,11 @@ Keep live Shopify product browsing, search, type filters, product pagination, an
 [16]: https://shopify.dev/docs/api/storefront/2026-10/objects/CartCost "Storefront CartCost and subtotal"
 [17]: https://shopify.dev/docs/api/storefront/2026-10/objects/ProductVariant "Storefront ProductVariant fields"
 [18]: https://shopify.dev/docs/api/storefront/2026-10/objects/CartLine "Storefront CartLine fields"
+
+## Dressing edit for women, men, and children
+
+**Mode:** Extension, reusing Electric Bloom's warm-paper, rose/berry palette, Bodoni Moda headings, DM Sans controls, fine borders, and existing spacing. Add an in-page `#dressing-edit` after the Beauty Skill Studio with a discoverable link in the studio. Preserve all existing navigation labels, anchors, try-on/privacy controls, contact fields, and the Shopify Coming soon guard. Design read: warm editorial personal-style tool for all ages, brand fidelity 10, restrained motion 2, density 5, visual variance 3, asset dependence 6. The narrative is a practical, encouraging wardrobe companion, viewed on phone or laptop, not a purchase flow or body assessment.
+
+Visitors choose Women, Men, or Children, a self-selected complexion (Explore all, Fair, Light, Medium, Tan, Deep, Very deep), undertone (Not sure, Warm, Cool, Neutral), and occasion (Everyday, Work/school, Celebration). Live results combine age-appropriate outfit pieces with labelled four-colour palettes and non-prescriptive contrast suggestions. All colours are open to every complexion; depth and undertone are distinct choices, not inferred from a photograph or ethnicity. Provide multiple palette options, a reset control, and up to three looks saved only in memory for this page visit. Children's options focus on comfort, movement, washable layers, and safe footwear without adult styling, makeup, body-correction advice, or collecting child data.
+
+Use three new AI-created editorial photographs of women, men, and children with different complexions as category inspiration, not Shopify inventory or photographs of users. These reference photographs do not change clothes or colours when controls change; label this distinction clearly. The colour swatches and outfit text update live. Do not claim a virtual clothing try-on, fit guarantee, purchasable apparel, or scientific colour diagnosis. Add `dressing-guide.js` and `dressing-guide.css` as isolated client-side modules; include them in the public static build and Preview allowlists. No production backend, account, upload, persistent personal data, or new dependency is introduced.

@@ -1,0 +1,91 @@
+.dressing-edit {
+  padding: clamp(4.8rem, 8vw, 7.6rem) var(--page-gutter);
+  background: var(--pink-light);
+}
+.dressing-edit__inner { width: min(100%, var(--wrap)); margin: 0 auto; }
+.dressing-edit__intro { display: grid; grid-template-columns: 1fr minmax(260px, .48fr); align-items: end; gap: 2rem; margin-bottom: 2.5rem; }
+.dressing-edit__intro h2 { margin: 0; font: 500 clamp(3rem, 6.1vw, 5.7rem)/1.02 var(--serif); letter-spacing: -.06em; }
+.dressing-edit__intro h2 em { color: var(--berry); font-weight: 400; }
+.dressing-edit__intro > p { max-width: 390px; margin: 0 0 .35rem; color: var(--ink-soft); font-size: .9rem; }
+.dressing-workspace { display: grid; grid-template-columns: minmax(280px, .75fr) minmax(0, 1.25fr); border: 1px solid var(--line); background: white; }
+.dressing-controls { padding: clamp(1.25rem, 3vw, 2.5rem); background: var(--pink-pale); border-right: 1px solid var(--line); }
+.dressing-controls fieldset { min-width: 0; margin: 0 0 1.5rem; border: 0; padding: 0; }
+.dressing-controls legend, .dressing-field > label { display: block; margin-bottom: .55rem; color: var(--ink); font-size: .82rem; font-weight: 700; }
+.dressing-audiences { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .4rem; }
+.dressing-audience { position: relative; display: flex; min-height: 58px; align-items: center; justify-content: center; border: 1px solid #c77a95; padding: .6rem .3rem; color: var(--berry); background: white; font-size: .8rem; font-weight: 700; cursor: pointer; transition: background .18s ease, color .18s ease; }
+.dressing-audience input { position: absolute; width: 1px; height: 1px; opacity: 0; }
+.dressing-audience:has(input:checked) { border-color: var(--berry-deep); background: var(--berry); color: white; }
+.dressing-audience:hover { box-shadow: 0 3px 10px rgba(89,18,52,.12); }
+.dressing-audience:focus-within { outline: 3px solid var(--berry); outline-offset: 3px; }
+.dressing-field { margin-bottom: 1.15rem; }
+.dressing-field select { display: block; width: 100%; min-height: 48px; border: 1px solid #d9b6c1; border-radius: 0; padding: .65rem .75rem; color: var(--ink); background: white; font: .9rem var(--sans); cursor: pointer; }
+.dressing-field small { display: block; margin-top: .4rem; color: var(--ink-soft); font-size: .73rem; line-height: 1.6; }
+.dressing-controls__note { padding-top: 1rem; border-top: 1px solid var(--line); color: var(--ink-soft); font-size: .76rem; line-height: 1.75; }
+.dressing-controls .beauty-guide__reset { font-size: .76rem; }
+.dressing-reference { margin: 0; }
+.dressing-reference img { display: block; width: 100%; aspect-ratio: 3 / 2; object-fit: contain; background: var(--pink-pale); }
+.dressing-reference figcaption { padding: .75rem 1.4rem; border-bottom: 1px solid var(--line); color: var(--ink-soft); font-size: .72rem; line-height: 1.6; }
+.dressing-reference [hidden], .dressing-look [hidden], .dressing-saved [hidden] { display: none !important; }
+.dressing-photo-error { margin: 0; padding: 2rem; background: var(--pink-pale); color: var(--ink-soft); font-size: .9rem; }
+.dressing-look { min-width: 0; }
+.dressing-look__body { padding: clamp(1.25rem, 3vw, 2.5rem); }
+.dressing-look__summary { margin: 0 0 .4rem; color: var(--berry); font-size: .7rem; letter-spacing: .05em; }
+.dressing-look h3 { margin: 0 0 .6rem; font: 500 clamp(2rem, 3.2vw, 3rem)/1.12 var(--serif); letter-spacing: -.045em; }
+.dressing-look__description { margin: 0; color: var(--ink-soft); font-size: .88rem; }
+.dressing-palette { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: .65rem; margin: 1.3rem 0 .7rem; padding: 0; list-style: none; }
+.dressing-palette li { min-width: 0; }
+.dressing-palette .dress-swatch { display: block; height: 66px; border: 1px solid var(--line); background: var(--dress-colour); }
+.dressing-palette strong { display: block; margin-top: .4rem; font-size: .76rem; line-height: 1.4; overflow-wrap: anywhere; }
+.dress-palette-role { display: block; color: var(--ink-soft); font-size: .7rem; }
+.dressing-palette-note, .dressing-fit-note, .dressing-complexion-note { color: var(--ink-soft); font-size: .8rem; line-height: 1.75; }
+.dressing-outfit { margin: 1.3rem 0; padding: 0; list-style: none; counter-reset: dress-step; }
+.dressing-outfit li { position: relative; border-top: 1px solid var(--line); padding: .85rem 0 .85rem 2.25rem; counter-increment: dress-step; }
+.dressing-outfit li::before { position: absolute; top: .9rem; left: 0; content: '0' counter(dress-step); color: var(--berry); font: 1.2rem var(--serif); }
+.dressing-outfit h4 { margin: 0 0 .25rem; font: 500 1.2rem var(--serif); }
+.dressing-outfit p { margin: 0; color: var(--ink-soft); font-size: .84rem; line-height: 1.75; }
+.dressing-child-note { padding: .85rem 1rem; border: 1px solid var(--line); color: var(--berry-deep); background: var(--pink-light); font-size: .8rem; }
+.dressing-look__actions { display: flex; flex-wrap: wrap; gap: .6rem; margin-top: 1.25rem; }
+.dressing-look__actions .button { margin-top: 0; font-size: .75rem; }
+.dressing-secondary { border-color: var(--berry); color: var(--berry); background: white; }
+.dressing-secondary:hover { background: var(--pink-light); }
+.dressing-look__actions .button:disabled, .dressing-look__actions .button[aria-disabled="true"] { background: var(--pink-light); border-color: #d9b6c1; color: var(--ink-soft); cursor: not-allowed; transform: none; }
+.dressing-status { min-height: 1.75em; margin: .8rem 0 0; font-size: .78rem; color: var(--berry); }
+.dressing-saved { margin-top: 1.75rem; padding: clamp(1.25rem, 3vw, 2rem); border: 1px solid var(--line); background: var(--pink-pale); }
+.dressing-saved__heading { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: .3rem 1rem; }
+.dressing-saved__heading h3 { margin: 0; font: 500 1.8rem var(--serif); letter-spacing: -.035em; }
+.dressing-saved__heading p, .dressing-saved__empty { margin: .5rem 0 0; font-size: .8rem; color: var(--ink-soft); }
+.dressing-saved__list { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem; margin: 1rem 0 0; padding: 0; list-style: none; }
+.dressing-saved__list:empty { margin: 0; }
+.dressing-saved__list > li { min-width: 0; padding: 1rem; background: white; border: 1px solid var(--line); }
+.dressing-saved__list h4 { margin: 0 0 .5rem; font: 500 1.2rem/1.3 var(--serif); }
+.dressing-saved__list p { font-size: .75rem; color: var(--ink-soft); overflow-wrap: anywhere; }
+.dressing-saved__list button { min-height: 44px; border: 1px solid #d9b6c1; padding: .4rem .65rem; font: 700 .72rem var(--sans); color: var(--berry); background: white; cursor: pointer; }
+.dressing-saved__list button:hover { border-color: var(--berry); background: var(--pink-light); }
+.dress-saved-palette { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: .35rem; margin: .8rem 0; padding: 0; list-style: none; }
+.dress-saved-palette .dress-swatch { display: block; height: 28px; border: 1px solid var(--line); background: var(--dress-colour); }
+.dress-saved-palette strong { display: block; margin-top: .25rem; font-size: .65rem; line-height: 1.4; overflow-wrap: anywhere; }
+.dress-saved-palette .dress-palette-role { font-size: .62rem; }
+.dress-saved-details { margin: .7rem 0; font-size: .75rem; color: var(--ink-soft); }
+.dress-saved-details summary { min-height: 44px; padding: .6rem 0; color: var(--berry); font-weight: 700; cursor: pointer; }
+.dress-saved-details ol { padding-left: 1.2rem; }
+.dress-saved-details li { margin-bottom: .5rem; }
+.dressing-edit__footer { margin: 1rem 0 0; color: var(--ink-soft); font-size: .73rem; }
+.beauty-studio__dressing-link { margin-top: 1.2rem; min-height: 44px; }
+@media (max-width: 900px) {
+  .dressing-workspace { grid-template-columns: 1fr; }
+  .dressing-controls { border-right: 0; border-bottom: 1px solid var(--line); }
+  .dressing-controls__fields { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem; }
+  .dressing-controls__note { margin-top: 0; }
+  .dressing-saved__list { grid-template-columns: 1fr; }
+}
+@media (max-width: 600px) {
+  .dressing-edit__intro { grid-template-columns: 1fr; gap: 1rem; }
+  .dressing-edit__intro h2 { font-size: clamp(2.7rem, 10vw, 3.4rem); }
+  .dressing-controls__fields { grid-template-columns: 1fr; gap: 0; }
+  .dressing-palette { gap: .4rem; }
+  .dressing-palette .dress-swatch { height: 52px; }
+  .dressing-look__actions .button { width: 100%; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .dressing-edit *, .dressing-edit *::before, .dressing-edit *::after { transition: none !important; }
+}

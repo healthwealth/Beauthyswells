@@ -23,6 +23,8 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:opsz,wght@6..96,400;6..96,500;6..96,600&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="./styles.css">
+  <link rel="stylesheet" href="./dressing-guide.css">
+  <script type="module" src="./dressing-guide.js"></script>
   <script src="./shopify-config.js" defer></script>
   <script src="./shopify-store.js" defer></script>
   <script src="./script.js" defer></script>
@@ -203,6 +205,96 @@
             </div>
           </section>
         </div>
+        <a class="text-link beauty-studio__dressing-link" href="#dressing-edit">Explore dressing for women, men &amp; children <span aria-hidden="true">→</span></a>
+      </div>
+    </section>
+
+    <section class="dressing-edit" id="dressing-edit" aria-labelledby="dressing-heading">
+      <div class="dressing-edit__inner">
+        <div class="dressing-edit__intro">
+          <div>
+            <p class="eyebrow eyebrow-berry"><span aria-hidden="true">✦</span> THE DRESSING EDIT · FOR EVERYONE</p>
+            <h2 id="dressing-heading">Your complexion.<br><em>Your kind of style.</em></h2>
+          </div>
+          <p>Elegant ideas for women, men, and children. Explore colours, build a comfortable outfit, and keep the combinations that feel like you.</p>
+        </div>
+        <div class="dressing-workspace">
+          <form class="dressing-controls" id="dressing-form" aria-label="Personalise your dressing edit">
+            <fieldset>
+              <legend>Who are you dressing?</legend>
+              <div class="dressing-audiences">
+                <label class="dressing-audience"><input name="dress-audience" type="radio" value="women" checked><span>Women</span></label>
+                <label class="dressing-audience"><input name="dress-audience" type="radio" value="men"><span>Men</span></label>
+                <label class="dressing-audience"><input name="dress-audience" type="radio" value="children"><span>Children</span></label>
+              </div>
+            </fieldset>
+            <div class="dressing-controls__fields">
+              <div class="dressing-field">
+                <label for="dress-complexion">Complexion / skin tone</label>
+                <select id="dress-complexion" name="dress-complexion" aria-describedby="dress-tone-help">
+                  <option value="all">Explore all skin tones</option>
+                  <option value="fair">Fair</option>
+                  <option value="light">Light</option>
+                  <option value="medium">Medium</option>
+                  <option value="tan">Tan</option>
+                  <option value="deep">Deep</option>
+                  <option value="very-deep">Very deep</option>
+                </select>
+                <small id="dress-tone-help">Optional and self-selected. Every skin tone can wear every colour.</small>
+              </div>
+              <div class="dressing-field">
+                <label for="dress-undertone">Undertone</label>
+                <select id="dress-undertone" name="dress-undertone" aria-describedby="dress-undertone-help">
+                  <option value="unsure">Not sure — let me explore</option>
+                  <option value="warm">Warm</option>
+                  <option value="cool">Cool</option>
+                  <option value="neutral">Neutral</option>
+                </select>
+                <small id="dress-undertone-help">Separate from skin depth. Try warm, cool, or mixed palettes; no colour test required.</small>
+              </div>
+              <div class="dressing-field">
+                <label for="dress-occasion">Where are you going?</label>
+                <select id="dress-occasion" name="dress-occasion">
+                  <option value="everyday">Everyday ease</option>
+                  <option value="smart">Work / school</option>
+                  <option value="celebration">A little celebration</option>
+                </select>
+              </div>
+            </div>
+            <p class="dressing-controls__note">A starting point, never a rule. Borrow from any wardrobe, adapt to your culture and climate, and put comfort first. Your choices stay on this page.</p>
+            <button class="beauty-guide__reset" id="dress-reset" type="button">Reset my choices</button>
+            <noscript><p>Enable JavaScript to personalise palettes and save looks. Clothing ideas are inspiration, not products for sale.</p></noscript>
+          </form>
+          <article class="dressing-look" aria-labelledby="dress-look-title">
+            <figure class="dressing-reference">
+              <img id="dress-image" src="/manus-storage/async-images/pIlNLZ7IgAaTQTX0Hl8hg1/image-1.webp" alt="AI-created outfit inspiration showing adult women with different skin tones in relaxed, elegant clothing" loading="lazy" width="1200" height="800">
+              <p class="dressing-photo-error" id="dress-image-error" hidden>The inspiration photo could not load. Your colour palette and outfit guide still work.</p>
+              <figcaption>AI-created outfit inspiration, not products for sale. Category photos stay the same as you change colours and occasions; the palette and outfit ideas below update. This is not a clothing try-on.</figcaption>
+            </figure>
+            <div class="dressing-look__body">
+              <p class="dressing-look__summary" id="dress-summary">Women · Everyday ease · All skin tones</p>
+              <h3 id="dress-look-title">Your everyday colour edit</h3>
+              <p class="dressing-look__description" id="dress-description">Try an easy outfit with a soft base, a comfortable layer, and one colour you love.</p>
+              <ul class="dressing-palette" id="dress-palette" aria-label="Suggested clothing colours"></ul>
+              <p class="dressing-palette-note" id="dress-palette-note">Play with the balance of soft neutrals and a richer accent. These suggestions are yours to change.</p>
+              <ol class="dressing-outfit" id="dress-outfit" aria-label="Three parts of your outfit"></ol>
+              <p class="dressing-fit-note" id="dress-fit-note">Choose a fit that feels comfortable when you sit, walk, and move.</p>
+              <p class="dressing-complexion-note" id="dress-complexion-note">Colour belongs to everyone. Try a gentle tonal combination or a stronger contrast—neither is a rule.</p>
+              <p class="dressing-child-note" id="dress-child-note" hidden>For school-age children: soft, washable clothing and secure shoes, with room to play. Let children choose colours they enjoy; no makeup or adult styling needed.</p>
+              <div class="dressing-look__actions">
+                <button class="button dressing-secondary" id="dress-next" type="button">Try another palette <span aria-hidden="true">↻</span></button>
+                <button class="button button-dark" id="dress-save" type="button">Save this look <span aria-hidden="true">＋</span></button>
+              </div>
+              <p class="dressing-status" id="dress-status" role="status" aria-live="polite" aria-atomic="true">Change a choice to explore your outfit edit.</p>
+            </div>
+          </article>
+        </div>
+        <section class="dressing-saved" aria-labelledby="dress-saved-heading">
+          <div class="dressing-saved__heading"><h3 id="dress-saved-heading">Your saved little looks.</h3><p>Up to three favourites. This page only—reloading clears them.</p></div>
+          <p class="dressing-saved__empty" id="dress-saved-empty">Found a combination you love? Save it here while you explore.</p>
+          <ul class="dressing-saved__list" id="dress-saved" aria-label="Saved dressing ideas"></ul>
+        </section>
+        <p class="dressing-edit__footer">Personal-style inspiration, not a colour diagnosis or a promise of fit. No photos, skin analysis, accounts, or shopping actions are needed.</p>
       </div>
     </section>
 
