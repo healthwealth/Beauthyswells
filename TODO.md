@@ -27,6 +27,7 @@
 ## Hairstyles on the face — complete
 - Add hairstyles to the face in the virtual try-on: a Hair area with sleek bob, long waves, soft curls, elegant updo, and No hairstyle options shown as thumbnails.
 - Fit the chosen hairstyle to the detected face (size, hairline, and head tilt) on the sample portrait or the visitor's selfie, layered with makeup; let visitors adjust hairstyle size and hairline position and clear it with Reset. Keep the existing consent and on-device privacy behavior.
+- Hairstyles appear on the portrait as soon as one is picked—no opt-in needed: fitted automatically on the sample portrait, placed in the center of a selfie and movable by dragging or with size, hairline, and side sliders; after the visitor opts in to the face model, the hairstyle fits their face automatically.
 - Add a Hair track with face-framing hairstyle tips to the Beauty Skill Studio and a Hair focus to the ritual builder.
 - Add an interactive makeup try-on with a sample portrait or local selfie capture, lipstick/blush/eye shades, intensity adjustment, original/look comparison, and reset.
 - Process the image and landmarks in the browser; do not upload or store the image. Before loading the model, show the MediaPipe metrics disclosure and require an explicit opt-in. Make loading, no-face, invalid-file, unsupported, and network-error states clear and accessible.

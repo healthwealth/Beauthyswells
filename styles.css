@@ -597,3 +597,5 @@ button, a { -webkit-tap-highlight-color: transparent; }
   .makeup-swatches:has(.makeup-swatch--hair) { grid-template-columns: repeat(3, minmax(0, 1fr)); }
   .beauty-tabs { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
+#makeup-canvas.is-hair-draggable { cursor: grab; touch-action: none; }
+#makeup-canvas.is-hair-dragging { cursor: grabbing; }

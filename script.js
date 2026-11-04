@@ -411,8 +411,29 @@ if (makeupStudio) {
   const makeupHairSizeValue = makeupStudio.querySelector('#makeup-hair-size-value');
   const makeupHairLift = makeupStudio.querySelector('#makeup-hair-lift');
   const makeupHairLiftValue = makeupStudio.querySelector('#makeup-hair-lift-value');
+  const makeupHairShift = makeupStudio.querySelector('#makeup-hair-shift');
+  const makeupHairShiftValue = makeupStudio.querySelector('#makeup-hair-shift-value');
   let hairSizeLevel = 1;
   let hairLiftLevel = 0;
+  let hairShiftLevel = 0;
+  // Extra placement from dragging the hairstyle on the portrait, in canvas pixels.
+  let hairDrag = { x: 0, y: 0 };
+  let hairDragStart = null;
+  let usingSamplePortrait = false;
+  // Key face points for the sample portrait (measured once with the on-device model),
+  // so hairstyles fit it immediately, even before the visitor opts in.
+  const samplePortraitFacePoints = {
+    10: { x: .72, y: .1567 },
+    152: { x: .7782, y: .4248 },
+    234: { x: .6646, y: .3393 },
+    454: { x: .8678, y: .2482 },
+    33: { x: .6754, y: .2767 },
+    263: { x: .8122, y: .2158 }
+  };
+
+  function hasHairstyle() {
+    return Boolean(selectedShades.hair?.face);
+  }
 
   function loadHairImage(style) {
     if (!style.url) return null;
@@ -429,29 +450,46 @@ if (makeupStudio) {
     return image.complete && image.naturalWidth ? image : null;
   }
 
-  function drawHairOverlay() {
-    const style = selectedShades.hair;
-    if (!style?.face || !faceLandmarks || faceLandmarks.length < 468) return;
-    const image = loadHairImage(style);
-    if (!image) return;
-
+  // Where the face sits on the portrait: from detected landmarks when available,
+  // otherwise a centered estimate that visitors can drag and resize.
+  function hairFaceGeometry() {
     const width = makeupCanvas.width;
     const height = makeupCanvas.height;
-    const point = (index) => ({ x: faceLandmarks[index].x * width, y: faceLandmarks[index].y * height });
+    const hasLandmarks = faceLandmarks && faceLandmarks.length >= 468;
+    const points = hasLandmarks ? faceLandmarks : (usingSamplePortrait ? samplePortraitFacePoints : null);
+    if (!points) {
+      const faceWidth = Math.min(width, height * .75) * .36;
+      return { faceWidth, faceLength: faceWidth * 1.3, angle: 0, foreheadX: width / 2, foreheadY: height * .24, fitted: false };
+    }
+    const point = (index) => ({ x: points[index].x * width, y: points[index].y * height });
     const leftFace = point(234);
     const rightFace = point(454);
     const forehead = point(10);
     const chin = point(152);
     const leftEye = point(33);
     const rightEye = point(263);
+    return {
+      faceWidth: Math.hypot(rightFace.x - leftFace.x, rightFace.y - leftFace.y),
+      faceLength: Math.hypot(chin.x - forehead.x, chin.y - forehead.y),
+      angle: Math.atan2(rightEye.y - leftEye.y, rightEye.x - leftEye.x),
+      foreheadX: forehead.x,
+      foreheadY: forehead.y,
+      fitted: true
+    };
+  }
 
-    const faceWidth = Math.hypot(rightFace.x - leftFace.x, rightFace.y - leftFace.y);
-    const faceLength = Math.hypot(chin.x - forehead.x, chin.y - forehead.y);
-    const angle = Math.atan2(rightEye.y - leftEye.y, rightEye.x - leftEye.x);
+  function drawHairOverlay() {
+    const style = selectedShades.hair;
+    if (!style?.face || !currentPhoto) return;
+    const image = loadHairImage(style);
+    if (!image) return;
+
+    const { faceWidth, faceLength, angle, foreheadX, foreheadY } = hairFaceGeometry();
     // The natural hairline usually sits a little above the top forehead landmark.
     const hairlineOffset = faceLength * (.12 + hairLiftLevel * .01);
-    const anchorX = forehead.x + Math.sin(angle) * hairlineOffset;
-    const anchorY = forehead.y - Math.cos(angle) * hairlineOffset;
+    const sideOffset = faceWidth * hairShiftLevel * .01;
+    const anchorX = foreheadX + Math.sin(angle) * hairlineOffset + Math.cos(angle) * sideOffset + hairDrag.x;
+    const anchorY = foreheadY - Math.cos(angle) * hairlineOffset + Math.sin(angle) * sideOffset + hairDrag.y;
 
     const scale = (faceWidth * 1.08 * hairSizeLevel) / (style.face.width * image.naturalWidth);
     const drawWidth = image.naturalWidth * scale;
@@ -468,6 +506,29 @@ if (makeupStudio) {
     const isHair = activeMakeupArea === 'hair';
     makeupHairFit.hidden = !isHair;
     makeupIntensityGroup.hidden = isHair;
+    makeupCanvas.classList.toggle('is-hair-draggable', isHair && hasHairstyle());
+  }
+
+  function updateLookButtons() {
+    const hasLook = Boolean(currentPhoto && (faceLandmarks || hasHairstyle()));
+    makeupCompareButton.disabled = !hasLook;
+    makeupResetButton.disabled = !hasLook;
+  }
+
+  function resetHairPlacement() {
+    hairSizeLevel = 1;
+    hairLiftLevel = 0;
+    hairShiftLevel = 0;
+    hairDrag = { x: 0, y: 0 };
+    makeupHairSize.value = '100';
+    makeupHairSizeValue.value = '100%';
+    makeupHairSizeValue.textContent = '100%';
+    makeupHairLift.value = '0';
+    makeupHairLiftValue.value = '0';
+    makeupHairLiftValue.textContent = '0';
+    makeupHairShift.value = '0';
+    makeupHairShiftValue.value = '0';
+    makeupHairShiftValue.textContent = '0';
   }
 
   function setMakeupStatus(message) {
@@ -531,7 +592,12 @@ if (makeupStudio) {
   function drawMakeupOverlay() {
     if (!currentPhoto) return;
     drawOriginalPhoto();
-    if (!faceLandmarks || showingOriginal) return;
+    if (showingOriginal) return;
+    if (!faceLandmarks) {
+      drawHairOverlay();
+      if (hasHairstyle()) makeupCanvas.setAttribute('aria-label', `Portrait with a ${selectedShades.hair.name.toLowerCase()} hairstyle preview`);
+      return;
+    }
 
     const width = makeupCanvas.width;
     const height = makeupCanvas.height;
@@ -629,15 +695,21 @@ if (makeupStudio) {
         selectedShades[activeMakeupArea] = shade;
         if (activeMakeupArea === 'hair') loadHairImage(shade);
         renderMakeupSwatches();
+        updateHairControls();
+        updateLookButtons();
         drawMakeupOverlay();
         if (activeMakeupArea !== 'hair') {
           setMakeupStatus(`${shade.name} ${palette.name} selected. Your photo stays in this browser.`);
         } else if (!shade.url) {
           setMakeupStatus('Hairstyle preview removed. Your photo stays in this browser.');
+        } else if (!currentPhoto) {
+          setMakeupStatus(`${shade.name} selected. Choose the sample portrait or your selfie to see it on a face.`);
+        } else if (faceLandmarks || usingSamplePortrait) {
+          setMakeupStatus(`${shade.name} hairstyle framed to your face. Drag it or adjust size, hairline, and side to fine-tune.`);
+        } else if (makeupConsent.checked && !isLoadingMakeup) {
+          startMakeupPreview();
         } else {
-          setMakeupStatus(faceLandmarks
-            ? `${shade.name} hairstyle framed to your face. Adjust size or hairline to fine-tune it.`
-            : `${shade.name} selected. Choose a portrait and select “Preview this look” to frame it to the face.`);
+          setMakeupStatus(`${shade.name} is on your portrait. Drag it into place and adjust its size—or tick the privacy note below and choose “Preview this look” to fit it to your face automatically.`);
         }
       });
       return button;
@@ -660,6 +732,7 @@ if (makeupStudio) {
     const requestRevision = ++photoRevision;
     currentPhoto = null;
     faceLandmarks = null;
+    usingSamplePortrait = source === samplePortraitUrl;
     showingOriginal = false;
     if (photoObjectUrl) URL.revokeObjectURL(photoObjectUrl);
     photoObjectUrl = null;
@@ -693,10 +766,12 @@ if (makeupStudio) {
       makeupCanvas.hidden = false;
       makeupPlaceholder.hidden = true;
       makeupClearButton.hidden = false;
-      makeupCompareButton.disabled = true;
-      makeupResetButton.disabled = true;
-      drawOriginalPhoto();
-      setMakeupStatus(`${label} is ready. Check the metrics notice and choose Preview this look.`);
+      hairDrag = { x: 0, y: 0 };
+      updateLookButtons();
+      drawMakeupOverlay();
+      setMakeupStatus(hasHairstyle()
+        ? `${label} is ready with your ${selectedShades.hair.name.toLowerCase()}. Drag it into place, or check the privacy note and choose Preview this look to fit it to your face.`
+        : `${label} is ready. Pick a hairstyle under Hair, or check the metrics notice and choose Preview this look.`);
     } catch {
       if (newPhotoObjectUrl) URL.revokeObjectURL(newPhotoObjectUrl);
       if (requestRevision !== photoRevision) return;
@@ -713,6 +788,7 @@ if (makeupStudio) {
     photoRevision += 1;
     currentPhoto = null;
     faceLandmarks = null;
+    usingSamplePortrait = false;
     showingOriginal = false;
     if (photoObjectUrl) URL.revokeObjectURL(photoObjectUrl);
     photoObjectUrl = null;
@@ -773,7 +849,7 @@ if (makeupStudio) {
         faceLandmarker = null;
         faceLandmarkerPromise = null;
         faceLandmarks = null;
-        drawOriginalPhoto();
+        drawMakeupOverlay();
         return;
       }
 
@@ -783,30 +859,34 @@ if (makeupStudio) {
       if (startingPhotoRevision !== photoRevision) return;
       if (startingConsentRevision !== consentRevision || !makeupConsent.checked) {
         faceLandmarks = null;
-        drawOriginalPhoto();
+        drawMakeupOverlay();
         return;
       }
 
       faceLandmarks = result.faceLandmarks?.[0] || null;
       if (!faceLandmarks || faceLandmarks.length < 468) {
         faceLandmarks = null;
-        drawOriginalPhoto();
-        makeupCompareButton.disabled = true;
-        makeupResetButton.disabled = true;
-        setMakeupStatus('We could not find a clear, front-facing face. Try a well-lit portrait with the face unobstructed. The photo was not uploaded.');
+        drawMakeupOverlay();
+        updateLookButtons();
+        setMakeupStatus(hasHairstyle()
+          ? 'We could not find a clear, front-facing face, so the hairstyle stays where you place it—drag it into position. The photo was not uploaded.'
+          : 'We could not find a clear, front-facing face. Try a well-lit portrait with the face unobstructed. The photo was not uploaded.');
         return;
       }
 
       showingOriginal = false;
-      makeupCompareButton.disabled = false;
       makeupCompareButton.setAttribute('aria-pressed', 'false');
       makeupCompareButton.textContent = 'Show original';
-      makeupResetButton.disabled = false;
+      hairDrag = { x: 0, y: 0 };
+      updateLookButtons();
       drawMakeupOverlay();
-      setMakeupStatus('Your look is ready. All image analysis and color rendering happened in this browser.');
+      setMakeupStatus(hasHairstyle()
+        ? `Your ${selectedShades.hair.name.toLowerCase()} is fitted to your face. All image analysis happened in this browser.`
+        : 'Your look is ready. All image analysis and color rendering happened in this browser.');
     } catch {
       faceLandmarks = null;
-      drawOriginalPhoto();
+      drawMakeupOverlay();
+      updateLookButtons();
       setMakeupStatus(previewStage === 'loading'
         ? 'The on-device face model could not load. Check your connection or browser support; your photo was not uploaded.'
         : 'We could not apply this preview. Try again with a clear, front-facing portrait; your photo was not uploaded.');
@@ -859,16 +939,58 @@ if (makeupStudio) {
     drawMakeupOverlay();
   });
 
+  makeupHairShift.addEventListener('input', () => {
+    hairShiftLevel = Number(makeupHairShift.value);
+    const label = hairShiftLevel > 0 ? `+${hairShiftLevel}` : String(hairShiftLevel);
+    makeupHairShiftValue.value = label;
+    makeupHairShiftValue.textContent = label;
+    drawMakeupOverlay();
+  });
+
+  // Drag the hairstyle directly on the portrait (mouse, pen, or touch).
+  function canvasScale() {
+    const rect = makeupCanvas.getBoundingClientRect();
+    return { x: makeupCanvas.width / Math.max(1, rect.width), y: makeupCanvas.height / Math.max(1, rect.height) };
+  }
+
+  makeupCanvas.addEventListener('pointerdown', (event) => {
+    if (activeMakeupArea !== 'hair' || !hasHairstyle() || !currentPhoto || showingOriginal) return;
+    hairDragStart = { pointerX: event.clientX, pointerY: event.clientY, x: hairDrag.x, y: hairDrag.y };
+    makeupCanvas.setPointerCapture(event.pointerId);
+    makeupCanvas.classList.add('is-hair-dragging');
+    event.preventDefault();
+  });
+
+  makeupCanvas.addEventListener('pointermove', (event) => {
+    if (!hairDragStart) return;
+    const scale = canvasScale();
+    hairDrag = {
+      x: hairDragStart.x + (event.clientX - hairDragStart.pointerX) * scale.x,
+      y: hairDragStart.y + (event.clientY - hairDragStart.pointerY) * scale.y
+    };
+    drawMakeupOverlay();
+  });
+
+  function endHairDrag(event) {
+    if (!hairDragStart) return;
+    hairDragStart = null;
+    makeupCanvas.classList.remove('is-hair-dragging');
+    if (makeupCanvas.hasPointerCapture?.(event.pointerId)) makeupCanvas.releasePointerCapture(event.pointerId);
+  }
+
+  makeupCanvas.addEventListener('pointerup', endHairDrag);
+  makeupCanvas.addEventListener('pointercancel', endHairDrag);
+
   makeupCompareButton.addEventListener('click', () => {
-    if (!faceLandmarks) return;
+    if (!currentPhoto || (!faceLandmarks && !hasHairstyle())) return;
     showingOriginal = !showingOriginal;
     makeupCompareButton.setAttribute('aria-pressed', String(showingOriginal));
-    makeupCompareButton.textContent = showingOriginal ? 'Show makeup look' : 'Show original';
+    makeupCompareButton.textContent = showingOriginal ? 'Show my look' : 'Show original';
     drawMakeupOverlay();
   });
 
   makeupResetButton.addEventListener('click', () => {
-    if (!faceLandmarks) return;
+    if (!currentPhoto) return;
     selectedShades = { ...initialShades };
     activeMakeupArea = 'lip';
     showingOriginal = false;
@@ -876,14 +998,7 @@ if (makeupStudio) {
     makeupIntensityLevel = .5;
     makeupIntensityValue.value = '50%';
     makeupIntensityValue.textContent = '50%';
-    hairSizeLevel = 1;
-    hairLiftLevel = 0;
-    makeupHairSize.value = '100';
-    makeupHairSizeValue.value = '100%';
-    makeupHairSizeValue.textContent = '100%';
-    makeupHairLift.value = '0';
-    makeupHairLiftValue.value = '0';
-    makeupHairLiftValue.textContent = '0';
+    resetHairPlacement();
     makeupAreaButtons.forEach((button) => {
       button.setAttribute('aria-pressed', String(button.dataset.makeupArea === activeMakeupArea));
     });
@@ -891,8 +1006,9 @@ if (makeupStudio) {
     renderMakeupSwatches();
     makeupCompareButton.setAttribute('aria-pressed', 'false');
     makeupCompareButton.textContent = 'Show original';
+    updateLookButtons();
     drawMakeupOverlay();
-    setMakeupStatus('Look reset to the original rose lip preview. Your photo remains in this browser.');
+    setMakeupStatus('Look reset—hairstyle removed and lip color back to rose. Your photo remains in this browser.');
   });
 
   makeupConsent.addEventListener('change', () => {
@@ -905,11 +1021,10 @@ if (makeupStudio) {
         faceLandmarker = null;
         faceLandmarkerPromise = null;
       }
-      if (currentPhoto) drawOriginalPhoto();
-      makeupCompareButton.disabled = true;
+      if (currentPhoto) drawMakeupOverlay();
       makeupCompareButton.setAttribute('aria-pressed', 'false');
       makeupCompareButton.textContent = 'Show original';
-      makeupResetButton.disabled = true;
+      updateLookButtons();
       setMakeupStatus('Try-on stopped because metrics consent was withdrawn. Your photo stays in this browser and was not uploaded.');
     }
     updateMakeupStartButton();
