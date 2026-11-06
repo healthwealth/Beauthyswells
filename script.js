@@ -1142,32 +1142,129 @@ if (makeupStudio) {
   });
 }
 
+const beautyEditFilterButtons = Array.from(document.querySelectorAll('[data-beauty-filter]'));
+const beautyEditCards = Array.from(document.querySelectorAll('[data-beauty-category]'));
+const beautyEditStatus = document.querySelector('#beauty-edit-status');
+beautyEditFilterButtons.forEach((button) => button.addEventListener('click', () => {
+  const category = button.dataset.beautyFilter;
+  let visibleCount = 0;
+  beautyEditFilterButtons.forEach((candidate) => {
+    candidate.setAttribute('aria-pressed', String(candidate === button));
+  });
+  beautyEditCards.forEach((card) => {
+    const visible = category === 'all' || card.dataset.beautyCategory === category;
+    card.hidden = !visible;
+    if (visible) visibleCount += 1;
+  });
+  if (beautyEditStatus) {
+    const label = button.textContent.trim();
+    beautyEditStatus.textContent = category === 'all'
+      ? `Showing all ${visibleCount} Beauty Edit ideas.`
+      : `Showing ${visibleCount} ${label} idea${visibleCount === 1 ? '' : 's'}.`;
+  }
+}));
+
 const inquiryForm = document.querySelector('#inquiry-form');
 const formStatus = document.querySelector('#form-status');
+const inquiryDisclosure = document.querySelector('#inquiry-disclosure');
 const inquiryName = inquiryForm?.elements.namedItem('name');
 const inquiryMessage = inquiryForm?.elements.namedItem('message');
+const inquirySubmitButton = inquiryForm?.querySelector('button[type="submit"]');
+let inquirySubmitting = false;
+let inquiryDeliveryReady = false;
+
+function updateInquirySubmitState() {
+  if (inquirySubmitButton) {
+    inquirySubmitButton.disabled = inquirySubmitting || !inquiryDeliveryReady;
+  }
+}
+
 function updateInquiryTextValidity(field, message) {
   if (field) field.setCustomValidity(field.value.trim() ? '' : message);
 }
+
+async function refreshInquiryDelivery() {
+  try {
+    const response = await fetch('/api/inquiry', {
+      method: 'GET',
+      headers: { Accept: 'application/json' },
+      cache: 'no-store'
+    });
+    if (!response.ok) throw new Error('Inquiry status unavailable');
+    const data = await response.json();
+    const recipient = typeof data.recipient === 'string' ? data.recipient : '';
+    const ready = data.ready === true && Boolean(recipient);
+    inquiryDeliveryReady = ready;
+    updateInquirySubmitState();
+
+    if (inquiryDisclosure) {
+      inquiryDisclosure.textContent = recipient
+        ? `When available, your note will go to ${recipient} through Resend. This site does not store submissions; Resend processes the email.${ready ? '' : ' Email routing is not ready yet, so the form will not send.'}`
+        : 'Email routing is not ready yet. Your note will not be sent, and this site does not store submissions.';
+    }
+    return { ready, recipient };
+  } catch {
+    inquiryDeliveryReady = false;
+    updateInquirySubmitState();
+    if (inquiryDisclosure) {
+      inquiryDisclosure.textContent = 'Email routing is temporarily unavailable. Your note will not be sent, and this site does not store submissions.';
+    }
+    return { ready: false, recipient: '' };
+  }
+}
+
+if (inquiryForm) void refreshInquiryDelivery();
+
 inquiryName?.addEventListener('input', () => updateInquiryTextValidity(inquiryName, 'Please enter your name.'));
-inquiryMessage?.addEventListener('input', () => updateInquiryTextValidity(inquiryMessage, 'Please add a message before opening your email draft.'));
-inquiryForm?.addEventListener('submit', (event) => {
+inquiryMessage?.addEventListener('input', () => updateInquiryTextValidity(inquiryMessage, 'Please add a message before sending.'));
+inquiryForm?.addEventListener('submit', async (event) => {
   event.preventDefault();
   updateInquiryTextValidity(inquiryName, 'Please enter your name.');
-  updateInquiryTextValidity(inquiryMessage, 'Please add a message before opening your email draft.');
+  updateInquiryTextValidity(inquiryMessage, 'Please add a message before sending.');
   if (!inquiryForm.reportValidity()) return;
+  if (inquirySubmitting) return;
 
+  inquirySubmitting = true;
+  updateInquirySubmitState();
+  if (formStatus) formStatus.textContent = 'Checking email routing…';
   const formData = new FormData(inquiryForm);
-  const subject = `A note for Beauthy Swells from ${String(formData.get('name')).trim()}`;
-  const body = [
-    'Hi Beauthy Swells,',
-    '',
-    String(formData.get('message')).trim(),
-    '',
-    `You can write back to me at ${formData.get('email')}.`,
-    '',
-    'Please choose the recipient in this draft, then press Send.'
-  ].join('\n');
-  window.location.href = `mailto:?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-  formStatus.textContent = 'We asked your email app to open a draft. If it opens, choose the recipient and press Send. If nothing opens, check your email-app setup.';
+  const payload = {
+    name: String(formData.get('name') || '').trim(),
+    email: String(formData.get('email') || '').trim(),
+    topic: String(formData.get('topic') || '').trim(),
+    message: String(formData.get('message') || '').trim(),
+    company_website: String(formData.get('company_website') || '').trim()
+  };
+
+  try {
+    const delivery = await refreshInquiryDelivery();
+    if (!delivery.ready) {
+      if (formStatus) formStatus.textContent = 'Email routing is not ready. Your note has not been sent or stored.';
+      return;
+    }
+
+    if (formStatus) formStatus.textContent = 'Sending your inquiry…';
+    const response = await fetch('/api/inquiry', {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(payload)
+    });
+    const result = await response.json().catch(() => ({}));
+    if (!response.ok || result.ok !== true) throw new Error('Inquiry was not accepted');
+
+    if (formStatus) {
+      formStatus.textContent = `Your inquiry was submitted to Resend for delivery to ${delivery.recipient}. This site does not store a copy.`;
+    }
+    inquiryForm.reset();
+    inquiryName?.setCustomValidity('');
+    inquiryMessage?.setCustomValidity('');
+  } catch {
+    if (formStatus) formStatus.textContent = 'We could not submit your inquiry. Your message has not been stored by this site; please try again later.';
+  } finally {
+    inquirySubmitting = false;
+    updateInquirySubmitState();
+  }
 });

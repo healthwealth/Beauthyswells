@@ -599,3 +599,83 @@ button, a { -webkit-tap-highlight-color: transparent; }
 }
 #makeup-canvas.is-hair-draggable { cursor: grab; touch-action: none; }
 #makeup-canvas.is-hair-dragging { cursor: grabbing; }
+
+
+/* Curated, non-commerce Beauty Edit hub */
+.beauty-hub { padding: clamp(4.8rem, 8vw, 7.2rem) var(--page-gutter); color: var(--ink); background: var(--pink-light); }
+.beauty-hub__inner { width: min(100%, var(--wrap)); margin: 0 auto; }
+.beauty-hub__intro { display: grid; grid-template-columns: 1fr minmax(280px, .58fr); align-items: end; gap: 2rem; margin-bottom: 2rem; }
+.beauty-hub__intro .eyebrow { margin-bottom: .85rem; }
+.beauty-hub__intro h2 { max-width: 850px; margin: 0; color: var(--ink); font-family: var(--serif); font-size: clamp(3.1rem, 6.2vw, 5.8rem); font-weight: 500; letter-spacing: -.065em; line-height: .98; }
+.beauty-hub__intro h2 em { color: var(--berry); font-weight: 400; }
+.beauty-hub__intro > p { max-width: 430px; margin: 0 0 .3rem; color: var(--ink-soft); font-size: .84rem; line-height: 1.8; }
+.beauty-hub__filter-row { display: flex; align-items: center; justify-content: space-between; gap: 1rem; margin: 2rem 0 1.15rem; }
+.beauty-hub__filter-label { margin: 0; color: var(--berry-deep); font-size: .66rem; font-weight: 700; letter-spacing: .045em; }
+.beauty-hub__filters { display: flex; flex-wrap: wrap; gap: .45rem; }
+.beauty-hub__filter { min-height: 44px; border: 1px solid #c77a95; padding: .55rem .9rem; color: var(--berry); background: transparent; font: inherit; font-size: .66rem; font-weight: 700; cursor: pointer; transition: color .2s ease, background .2s ease, border-color .2s ease; }
+.beauty-hub__filter:hover, .beauty-hub__filter[aria-pressed="true"] { border-color: var(--berry); color: white; background: var(--berry); }
+.beauty-hub__filter:focus-visible { outline: 2px solid var(--berry-deep); outline-offset: 3px; }
+.beauty-hub__status { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+.beauty-hub__grid { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); align-items: stretch; gap: 1rem; }
+.beauty-hub-card { display: flex; min-width: 0; flex-direction: column; overflow: hidden; border: 1px solid #e6ccd3; background: white; box-shadow: 0 10px 24px rgba(89,18,52,.045); }
+.beauty-hub-card[hidden] { display: none !important; }
+.beauty-hub-card--care { grid-column: span 5; }
+.beauty-hub-card--tryon { grid-column: span 7; }
+.beauty-hub-card--dressing { grid-column: 1 / -1; display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(280px, .85fr); }
+.beauty-hub-card__media { position: relative; display: block; min-width: 0; aspect-ratio: 16 / 10; margin: 0; overflow: hidden; background: #fff8f6; }
+.beauty-hub-card__media img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.beauty-hub-card--care .beauty-hub-card__media img { object-position: center 55%; }
+.beauty-hub-card--tryon .beauty-hub-card__media img { object-position: center 36%; }
+.beauty-hub-card__media--triptych { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 2px; aspect-ratio: auto; min-height: 310px; }
+.beauty-hub-card__media--triptych img { min-width: 0; }
+.beauty-hub-card__index { position: absolute; right: .75rem; bottom: .75rem; padding: .45rem .65rem; color: white; background: rgba(41,20,30,.82); font-size: .53rem; font-weight: 700; letter-spacing: .12em; }
+.beauty-hub-card__body { display: flex; min-width: 0; flex: 1; flex-direction: column; align-items: flex-start; padding: clamp(1rem, 2.2vw, 1.55rem); }
+.beauty-hub-card__body .eyebrow { margin: 0 0 .55rem; font-size: .55rem; }
+.beauty-hub-card__body h3 { max-width: 17ch; margin: 0; color: var(--ink); font-family: var(--serif); font-size: clamp(1.7rem, 3vw, 2.55rem); font-weight: 500; letter-spacing: -.045em; line-height: 1.05; }
+.beauty-hub-card__body h3 em { color: var(--berry); font-weight: 400; }
+.beauty-hub-card__body > p:not(.eyebrow) { max-width: 48ch; margin: .7rem 0 0; color: var(--ink-soft); font-size: .72rem; line-height: 1.75; }
+.beauty-hub-card__links { display: flex; flex-wrap: wrap; gap: .55rem 1.1rem; margin-top: auto; padding-top: 1.1rem; }
+.beauty-hub-card__links .text-link { min-height: 44px; display: inline-flex; align-items: center; gap: .45rem; font-size: .67rem; }
+.beauty-hub-card__links .text-link:focus-visible { outline: 2px solid var(--berry-deep); outline-offset: 3px; }
+.beauty-hub__note { max-width: 820px; margin: 1.1rem auto 0; color: #75676d; text-align: center; font-size: .62rem; line-height: 1.7; }
+.beauty-inquiry.contact { margin-top: clamp(3rem, 6vw, 5rem); border-top: 1px solid #dcbec8; padding-top: clamp(2.5rem, 5vw, 4rem); }
+.beauty-inquiry .contact-form { border: 1px solid #e6ccd3; padding: clamp(1.2rem, 3vw, 2rem); background: white; box-shadow: 0 10px 24px rgba(89,18,52,.05); }
+.beauty-inquiry .contact-form select { width: 100%; min-height: 48px; border: 1px solid #d8aab8; border-radius: 0; padding: .6rem .75rem; color: var(--ink); background: white; font: inherit; font-size: .75rem; }
+.beauty-inquiry .contact-form select:focus-visible, .beauty-inquiry .contact-form input:focus-visible, .beauty-inquiry .contact-form textarea:focus-visible { outline: 2px solid var(--berry); outline-offset: 2px; }
+.beauty-inquiry .form-note { max-width: 46ch; }
+.beauty-inquiry .form-status { min-height: 1.4em; color: var(--berry-deep); font-size: .68rem; line-height: 1.6; }
+.beauty-inquiry .form-status:empty { min-height: 0; }
+.beauty-inquiry .button:disabled { cursor: not-allowed; opacity: .58; }
+.beauty-inquiry .button-dark:disabled:hover { background: var(--berry); }
+.inquiry-honeypot { position: absolute !important; width: 1px !important; height: 1px !important; margin: -1px !important; padding: 0 !important; overflow: hidden !important; clip-path: inset(50%) !important; white-space: nowrap !important; border: 0 !important; }
+
+@media (max-width: 900px) {
+  .beauty-hub__intro { grid-template-columns: 1fr minmax(250px, .62fr); gap: 1.25rem; }
+  .beauty-hub-card--care, .beauty-hub-card--tryon { grid-column: span 6; }
+  .beauty-hub-card--dressing { grid-template-columns: minmax(0, 1fr) minmax(250px, .9fr); }
+  .beauty-hub-card__media--triptych { min-height: 270px; }
+}
+@media (max-width: 700px) {
+  .beauty-hub { padding: 4.7rem var(--page-gutter) 4rem; }
+  .beauty-hub__intro { grid-template-columns: 1fr; gap: .8rem; }
+  .beauty-hub__intro h2 { font-size: clamp(3rem, 11vw, 4.8rem); }
+  .beauty-hub__intro > p { max-width: 540px; font-size: .8rem; }
+  .beauty-hub__filter-row { align-items: flex-start; flex-direction: column; gap: .6rem; }
+  .beauty-hub__filters { width: 100%; gap: .35rem; }
+  .beauty-hub__filter { flex: 1 1 auto; padding-inline: .68rem; }
+  .beauty-hub__grid { grid-template-columns: 1fr; gap: .75rem; }
+  .beauty-hub-card--care, .beauty-hub-card--tryon, .beauty-hub-card--dressing { grid-column: 1 / -1; }
+  .beauty-hub-card--dressing { display: flex; }
+  .beauty-hub-card--dressing .beauty-hub-card__media { min-height: 0; aspect-ratio: 16 / 9; }
+  .beauty-hub-card__body { padding: 1.05rem; }
+  .beauty-hub-card__body h3 { font-size: clamp(1.8rem, 7vw, 2.4rem); }
+  .beauty-hub-card__links { gap: .35rem .8rem; }
+  .beauty-hub__note { margin-top: .9rem; text-align: left; }
+  .beauty-inquiry.contact { margin-top: 2.5rem; padding-top: 2.3rem; }
+  .beauty-inquiry .contact-form { width: 100%; }
+}
+@media (max-width: 360px) {
+  .beauty-hub__filter { min-height: 44px; padding-inline: .45rem; font-size: .59rem; }
+  .beauty-hub-card__body { padding: .9rem; }
+  .beauty-hub-card__links { flex-direction: column; align-items: flex-start; }
+}
